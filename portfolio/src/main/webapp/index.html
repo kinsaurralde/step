@@ -8,14 +8,15 @@
   </head>
   <body>
     <div id="content">
-      <h1>My Portfolio</h1>
+      <h1 id="title">My Portfolio</h1>
       <p>This is my portfolio.</p>
       <p>My name is Kyle Insaurralde</p>
       <p>This is Simba</p>
-      <img src="/images/simba.jpg" width="800" height="600">
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
+      <img src="/images/simba.jpg" class="image">
+      <div class="bordered">
+        <button onclick="addRandomGreeting()">Click here to get a random message</button>
+        <div id="greeting-container"></div>
+      </div>
     </div>
   </body>
 </html>
