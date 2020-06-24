@@ -12,31 +12,62 @@
 	<div id="content">
 		<h1 id="title">My Portfolio</h1>
 		<div class="subsection">
-			<h2>Links</h2>
-			<p>This section will have links to other profiles</p>
-		</div>
-		<div class="subsection">
 			<h2>About Me</h2>
-			<p>This is my portfolio.</p>
-			<p>My name is Kyle Insaurralde</p>
+			<p>My name is Kyle Insaurralde. I am a junior at UC Davis. My favorite programming language is python. For fun, I like to play minecraft.</p>
 		</div>
 		<div class="subsection">
 			<h2>Projects</h2>
-			<p>This section will have my projects</p>
+            <div class="left-space">
+                <h3>Website</h3>
+                <div class="left-space">
+                    <p>I have another project website that I add stuff to. It contains the projects listed below along with a few others.</p>
+                    <a href="https://kinsaurralde.com/" target="_blank">Link</a>
+                </div>
+                <h3>ws281x LEDs</h3>
+                <div class="left-space">
+                    <p>
+                        ws281x LEDs are LED strips in which every LED can be individually controlled.
+                        One device that can control them is a raspberry pi. 
+                        This project is a python flask webserver that provides a website to control the rgb lights through the rpi_ws281x library.
+                        It has animations.
+                    </p>
+                    <a href="https://github.com/kinsaurralde/ws_281x-lights" target="_blank">Github Link</a>
+                </div>
+                <h3>Weather</h3>
+                <div class="left-space">
+                    <p>
+                        This page displays the weather at your current location. It can also get the weather at user inputted coordinates. 
+                        It displays todays high, low, and current temperatures, and has a second row that provides more options.
+                    </p>
+                    <a href="https://weather.kinsaurralde.com/" target="_blank">Link</a>
+                </div>
+                <h3>Minesweeper</h3>
+                <div class="left-space">
+                    <p>
+                        This is a recreation of classic computer game Minesweeper. It is written in p5js.
+                    </p>
+                    <a href="https://kinsaurralde.com/p5/minesweeper/index.html" target="_blank">Link</a>
+                </div>
+            </div>
 		</div>
 		<div class="subsection">
 			<h2>Cat</h2>
 			<p>This is Simba</p>
 			<img src="/images/simba.jpg" class="image">
-      </div>
-			<div class="subsection">
-				<h2>Random Message</h2>
-				<div class="bordered">
-					<button onclick="addRandomGreeting()">Click here to get a random message</button>
-					<div id="greeting-container"></div>
-				</div>
-			</div>
-		</div>
+        </div>
+        <div class="subsection">
+            <h2>Random Message</h2>
+            <div class="bordered">
+                <button onclick="addRandomGreeting()">Click here to get a random message</button>
+                <div id="greeting-container"></div>
+            </div>
+        </div>
+        <div class="subsection">
+            <h2>Links</h2>
+            <a href="https://github.com/kinsaurralde" target="_blank"><image class="icon" src="/icons/GitHub-Mark-120px-plus.png"></a>
+            <a href="https://www.linkedin.com/in/kyle-insaurralde-a0397a165" target="_blank"><image class="icon" src="/icons/LI-In-Bug.png" style="width: 70px;"></a>
+        </div>
+    </div>
 </body>
 
 </html>

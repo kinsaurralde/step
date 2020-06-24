@@ -30,6 +30,16 @@
     border: 2px solid black;
 }
 
+.icon {
+    width: 60px;
+    height: 60px;
+    padding: 10px;
+}
+
 .bordered {
     border: 2px solid black;
+}
+
+.left-space {
+    margin-left: 35px;
 }
