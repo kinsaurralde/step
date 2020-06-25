@@ -57,10 +57,11 @@ a:visited {
   background-color: rgba(10, 10, 10, .05);
 }
 
-.image {
+.image-container {
   width: 800px;
   height: 600px;
   border: 2px solid black;
+  background: lightgrey;
 }
 
 .gallery-button {
