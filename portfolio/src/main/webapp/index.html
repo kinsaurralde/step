@@ -10,7 +10,7 @@
 
 <body>
 	<div id="content">
-		<h1 id="title">My Portfolio</h1>
+		<h1 class="centered">My Portfolio</h1>
 		<div class="subsection">
 			<h2>About Me</h2>
 			<p>My name is Kyle Insaurralde. I am a junior at UC Davis. My favorite programming language is python. For fun, I like to play minecraft.</p>
@@ -53,12 +53,18 @@
 		<div class="subsection">
 			<h2>Cat</h2>
 			<p>This is Simba</p>
-			<img src="/images/simba.jpg" class="image">
+			<img src="/images/simba.jpg" class="image" id="cat-gallery-image">
+            <div style="width: 800px;">
+                <div class="centered" style="padding: 5px;">Test Subtitle</div>
+                <input type="button" class="gallery-button" value="Previous Photo">
+                <input type="button" class="gallery-button" value="Random Photo">
+                <input type="button" class="gallery-button" value="Next Photo">
+            </div>
         </div>
         <div class="subsection">
             <h2>Random Message</h2>
+            <input type="button" value="Click here to get a random message" onclick="addRandomGreeting()">
             <div class="bordered">
-                <button onclick="addRandomGreeting()">Click here to get a random message</button>
                 <div id="greeting-container"></div>
             </div>
         </div>
