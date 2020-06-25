@@ -26,3 +26,37 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+
+let cat_photo_num = 0;
+let cat_gallery_image = document.getElementById("cat-gallery-image");
+let cat_gallery_subtitle = document.getElementById("cat-gallery-subtitle");
+const cat_photos = [
+    ["simba.jpg", "This is Simba sleeping part 1"],
+    ["simba_2.jpg", "This is Simba sleeping part 2"],
+    ["IMG_7812.JPG", "This is Simba sleeping part 3"],
+    ["IMG_6657.jpeg", "This is Simba sleeping part 4"],
+];
+
+function changeCatPhoto(num) {
+    cat_gallery_image.src = "/images/" + cat_photos[num][0];
+    cat_gallery_subtitle.innerText = cat_photos[num][1];
+}
+
+function previousCatPhoto() {
+    if (cat_photo_num > 0) {
+        cat_photo_num -= 1;
+    } else {
+        cat_photo_num = cat_photos.length - 1;
+    }
+    changeCatPhoto(cat_photo_num);
+}
+
+function nextCatPhoto() {
+    cat_photo_num = (cat_photo_num + 1) % cat_photos.length;
+    changeCatPhoto(cat_photo_num);
+}
+
+function randomCatPhoto() {
+    cat_photo_num = Math.floor(Math.random() * cat_photos.length);
+    changeCatPhoto(cat_photo_num);
+}

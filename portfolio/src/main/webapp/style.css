@@ -9,13 +9,13 @@ input[type=button]:hover {
     border: 2px solid yellow;
 }
 
-input[type=button]:active {
-    border: 2px solid blue;
+input[type=button]:focus {
+    border: 2px solid green;
     outline: none;
 }
 
-input[type=button]:focus {
-    border: 2px solid green;
+input[type=button]:active {
+    border: 2px solid blue;
     outline: none;
 }
 
