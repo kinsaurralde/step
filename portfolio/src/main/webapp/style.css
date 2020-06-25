@@ -10,26 +10,26 @@
 }
 
 #title {
-    text-align: center;
+  text-align: center;
 }
 
 .subsection {
-    background-color: rgba(10, 10, 10, 0);
-    border-top: 1px solid blue;
-    padding-bottom: 15px;
-    transition: .5s;
+  background-color: rgba(10, 10, 10, 0);
+  border-top: 1px solid blue;
+  padding-bottom: 15px;
+  transition: .5s;
 }
 
 .subsection:hover {
-    background-color: rgba(10, 10, 10, .1);
+  background-color: rgba(10, 10, 10, .1);
 }
 
 .image {
-    width: 800px;
-    height: 600px;
-    border: 2px solid black;
+  width: 800px;
+  height: 600px;
+  border: 2px solid black;
 }
 
 .bordered {
-    border: 2px solid black;
+  border: 2px solid black;
 }
