@@ -3,6 +3,7 @@ input[type=button] {
   border: 2px solid rgb(100, 100, 100);
   margin-top: 5px;
   margin-bottom: 5px;
+  height: 28px;
 }
 
 input[type=button]:hover {
@@ -42,6 +43,12 @@ a:visited {
   margin-top: 20px;
 }
 
+.centered-flex {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 .centered {
   text-align: center;
 }
@@ -65,7 +72,8 @@ a:visited {
 }
 
 .gallery-button {
-  width: 33%;
+  width: 30%;
+  margin: 5px;
 }
 
 .icon {

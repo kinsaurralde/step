@@ -47,7 +47,6 @@ changeCatPhoto(0);
 
 function changeCatPhoto(num) {
   cat_gallery_subtitle.innerText = cat_photos[num]["subtitle"];
-  cat_gallery_image.innerHTML = "";
   if (cat_photos[num]["img"] == null) {
     let new_image = new Image();
     new_image.onload = function() {
@@ -68,10 +67,12 @@ function changeCatPhoto(num) {
       }
       new_image.alt = cat_photos[num]["subtitle"];
       cat_photos[num][2] = new_image;
+      cat_gallery_image.innerHTML = "";
       cat_gallery_image.appendChild(new_image);
     }
     new_image.src = "/images/" + cat_photos[num]["filename"];
   } else {
+    cat_gallery_image.innerHTML = "";
     cat_gallery_image.appendChild(cat_photos[num]["img"]);
   }
 }
