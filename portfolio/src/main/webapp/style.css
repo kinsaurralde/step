@@ -1,9 +1,35 @@
 #content {
   margin-left: auto;
   margin-right: auto;
-  width: 650px;
+  width: 800px;
+  font-family: sans-serif;
 }
 
 #greeting-container {
   margin-top: 20px;
+}
+
+#title {
+  text-align: center;
+}
+
+.subsection {
+  background-color: rgba(10, 10, 10, 0);
+  border-top: 1px solid blue;
+  padding-bottom: 15px;
+  transition: .5s;
+}
+
+.subsection:hover {
+  background-color: rgba(10, 10, 10, .1);
+}
+
+.image {
+  width: 800px;
+  height: 600px;
+  border: 2px solid black;
+}
+
+.bordered {
+  border: 2px solid black;
 }
