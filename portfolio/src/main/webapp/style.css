@@ -14,6 +14,23 @@ input[type=button]:active {
     outline: none;
 }
 
+input[type=button]:focus {
+    border: 2px solid green;
+    outline: none;
+}
+
+a {
+    color: blue;
+}
+
+a:focus {
+    outline: 2px solid green;
+}
+
+a:visited {
+    color: red;
+}
+
 #content {
   margin-left: auto;
   margin-right: auto;
