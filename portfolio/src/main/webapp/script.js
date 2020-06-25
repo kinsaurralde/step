@@ -31,10 +31,14 @@ let cat_photo_num = 0;
 let cat_gallery_image = document.getElementById("cat-gallery-image");
 let cat_gallery_subtitle = document.getElementById("cat-gallery-subtitle");
 let cat_photos = [
-  ["simba.jpg", "This is Simba sleeping part 1", null],
-  ["simba_2.jpg", "This is Simba sleeping part 2", null],
-  ["IMG_7812.JPG", "This is Simba sleeping part 3", null],
-  ["IMG_6657.jpeg", "This is Simba sleeping part 4", null],
+  {"filename": "simba.jpg", "subtitle": "Simba sleeping part 1", "img": null},
+  {"filename": "simba_2.jpg", "subtitle": "Simba sleeping part 2", "img": null},
+  {"filename": "IMG_1346.JPG", "subtitle": "Simba in a box", "img": null},
+  {"filename": "IMG_1950.JPG", "subtitle": "Pepper eating food", "img": null},
+  {"filename": "IMG_3973.JPG", "subtitle": "Simba sleeping part 3", "img": null},
+  {"filename": "IMG_4355.JPG", "subtitle": "Annoyed", "img": null},
+  {"filename": "IMG_7812.JPG", "subtitle": "Looking at something", "img": null},
+  {"filename": "IMG_6657.jpeg", "subtitle": "Christmas costume", "img": null},
 ];
 const max_width = 800;
 const max_height = 600;
@@ -42,9 +46,9 @@ const max_height = 600;
 changeCatPhoto(0);
 
 function changeCatPhoto(num) {
-  cat_gallery_subtitle.innerText = cat_photos[num][1];
+  cat_gallery_subtitle.innerText = cat_photos[num]["subtitle"];
   cat_gallery_image.innerHTML = "";
-  if (cat_photos[num][2] == null) {
+  if (cat_photos[num]["img"] == null) {
     let new_image = new Image();
     new_image.onload = function() {
       let width = new_image.width;
@@ -62,12 +66,13 @@ function changeCatPhoto(num) {
         new_image.style.height = max_height + "px";
         new_image.style.marginLeft = ((max_width - new_width) / 2) + "px";
       }
+      new_image.alt = cat_photos[num]["subtitle"];
       cat_photos[num][2] = new_image;
       cat_gallery_image.appendChild(new_image);
-      }
-    new_image.src = "/images/" + cat_photos[num][0];
+    }
+    new_image.src = "/images/" + cat_photos[num]["filename"];
   } else {
-    cat_gallery_image.appendChild(cat_photos[num][2]);
+    cat_gallery_image.appendChild(cat_photos[num]["img"]);
   }
 }
 
