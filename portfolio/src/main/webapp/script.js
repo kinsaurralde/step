@@ -70,7 +70,7 @@ function changeCatPhoto(num) {
         newImage.style.height = newHeight + 'px';
         newImage.style.marginTop =
             ((MAX_HEIGHT - newHeight) / 2) + 'px'; /* Center photo vertically */
-      } else {  /* Set height to MAX_HEIGHT and scale width */
+      } else { /* Set height to MAX_HEIGHT and scale width */
         let scaleFactor = MAX_HEIGHT / height;
         let new_width = width * scaleFactor;
         newImage.style.width = new_width + 'px';
@@ -83,7 +83,8 @@ function changeCatPhoto(num) {
       catGalleryImage.innerHTML = '';
       catGallerySubtitle.innerText = catPhotos[num]['subtitle'];
       catGalleryImage.appendChild(newImage);
-    } newImage.src = '/images/' + catPhotos[num]['filename'];
+    };
+    newImage.src = '/images/' + catPhotos[num]['filename'];
   } else {
     catGalleryImage.innerHTML = '';
     catGallerySubtitle.innerText = catPhotos[num]['subtitle'];
