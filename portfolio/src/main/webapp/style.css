@@ -1,6 +1,36 @@
+html {
+  --light-background: white;
+  --light-text: black;
+  --light-input-color: rgb(200, 200, 200);
+  --light-input-border-color: rgb(100, 100, 100);
+
+  --dark-background: black;
+  --dark-text: white;
+  --dark-input-color: rgb(100, 100, 100);
+  --dark-input-border-color: rgb(200, 200, 200);
+  
+  --background-color: var(--light-background);
+  --text-color: var(--light-text);
+  --input-color: var(--light-input-color);
+  --input-border-color: var(--light-input-border-color);
+
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    --background-color: var(--dark-background);
+    --text-color: var(--dark-text);
+    --input-color: var(--dark-input-color);
+    --input-border-color: var(--dark-input-border-color);
+  }
+}
+
 input[type=button] {
-  background-color: rgb(200, 200, 200);
-  border: 2px solid rgb(100, 100, 100);
+  background-color: var(--input-color);
+  border: 2px solid var(--input-border-color);
+  color: var(--text-color);
   margin-top: 5px;
   margin-bottom: 5px;
   height: 28px;
@@ -67,8 +97,8 @@ a:visited {
 .image-container {
   width: 800px;
   height: 600px;
-  border: 2px solid black;
-  background: lightgrey;
+  border: 2px solid var(--text-color);
+  background: var(--input-color);
 }
 
 .gallery-button {
@@ -83,7 +113,7 @@ a:visited {
 }
 
 .bordered {
-  border: 2px solid black;
+  border: 2px solid var(--text-color);
 }
 
 .left-space {
