@@ -1,21 +1,25 @@
 html {
+
   --light-background: white;
   --light-text: black;
   --light-input-color: rgb(200, 200, 200);
   --light-input-border-color: rgb(100, 100, 100);
+  --light-menu-color: limegreen;
 
   --dark-background: black;
   --dark-text: white;
   --dark-input-color: rgb(100, 100, 100);
   --dark-input-border-color: rgb(200, 200, 200);
+  --dark-menu-color: darkgreen;
   
   --background-color: var(--light-background);
   --text-color: var(--light-text);
   --input-color: var(--light-input-color);
   --input-border-color: var(--light-input-border-color);
+  --menu-color: var(--light-menu-color);
 
-  background: var(--background-color);
-  color: var(--text-color);
+  transition: 0.5s;
+  background-color: var(--background-color);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,11 +28,16 @@ html {
     --text-color: var(--dark-text);
     --input-color: var(--dark-input-color);
     --input-border-color: var(--dark-input-border-color);
+    --menu-color: var(--dark-menu-color);
   }
 }
 
 body {
   margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  color: var(--text-color);
 }
 
 input[type=button] {
@@ -81,6 +90,11 @@ a:focus {
   margin-top: 20px;
 }
 
+#footer {
+  border-top: 2px solid blue;
+  border-bottom: none;
+}
+
 .centered-flex {
   display: flex;
   justify-content: center;
@@ -95,11 +109,19 @@ a:focus {
   background-color: rgba(10, 10, 10, 0);
   border-bottom: 2px solid blue;
   padding-bottom: 15px;
-  transition: .5s;
 }
 
 .subsection:hover {
   background-color: rgba(10, 10, 10, .05);
+}
+
+.subtitle {
+  padding: 5px; 
+  width: 100%;
+}
+
+.div-text {
+  color: var(--text-color);
 }
 
 .image-container {
@@ -114,12 +136,12 @@ a:focus {
   margin: 5px;
 }
 
-#navbar:hover {
-  background-color: limegreen;
+.menu-bar:hover {
+  background-color: var(--menu-color);
 }
 
-#navbar {
-  background-color: limegreen;
+.menu-bar {
+  background-color: var(--menu-color);
 }
 
 .menu-item {
@@ -130,7 +152,7 @@ a:focus {
 
 input[type=button].menu-button {
   width: 95%;
-  background-color: limegreen;
+  background-color: var(--menu-color);
   border: none;
   font-size: 20px;
   

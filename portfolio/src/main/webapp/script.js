@@ -102,3 +102,20 @@ function randomCatPhoto() {
   cat_photo_num = Math.floor(Math.random() * cat_photos.length);
   changeCatPhoto(cat_photo_num);
 }
+
+function toggleTheme() {
+  let cssVars = document.getElementsByTagName("html")[0].style;
+  let curTheme = cssVars.getPropertyValue("--background-color");
+  let newTheme = "dark";
+  if (curTheme == "var(--dark-background)") {
+    newTheme = "light";
+    document.getElementById("github-icon").src = "/icons/GitHub-Mark-120px-plus.png";
+  } else {
+    document.getElementById("github-icon").src = "/icons/GitHub-Mark-Light-120px-plus.png";
+  }
+  cssVars.setProperty("--background-color", "var(--" + newTheme + "-background)");
+  cssVars.setProperty("--text-color", "var(--" + newTheme + "-text)");
+  cssVars.setProperty("--input-color", "var(--" + newTheme + "-input-color)");
+  cssVars.setProperty("--input-border-color", "var(--" + newTheme + "-input-border-color)");
+  cssVars.setProperty("--menu-color", "var(--" + newTheme + "-menu-color)");
+}
