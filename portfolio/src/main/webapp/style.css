@@ -14,7 +14,7 @@ html {
   --input-color: var(--light-input-color);
   --input-border-color: var(--light-input-border-color);
 
-  background-color: var(--background-color);
+  background: var(--background-color);
   color: var(--text-color);
 }
 
@@ -25,6 +25,10 @@ html {
     --input-color: var(--dark-input-color);
     --input-border-color: var(--dark-input-border-color);
   }
+}
+
+body {
+  margin: 0;
 }
 
 input[type=button] {
@@ -51,15 +55,19 @@ input[type=button]:active {
 }
 
 a {
+  color: green;
+}
+
+a:visited {
+  color: red;
+}
+
+a:hover {
   color: blue;
 }
 
 a:focus {
   outline: 2px solid green;
-}
-
-a:visited {
-  color: red;
 }
 
 #content {
@@ -85,7 +93,7 @@ a:visited {
 
 .subsection {
   background-color: rgba(10, 10, 10, 0);
-  border-top: 1px solid blue;
+  border-bottom: 2px solid blue;
   padding-bottom: 15px;
   transition: .5s;
 }
@@ -104,6 +112,32 @@ a:visited {
 .gallery-button {
   width: 30%;
   margin: 5px;
+}
+
+#navbar:hover {
+  background-color: limegreen;
+}
+
+#navbar {
+  background-color: limegreen;
+}
+
+.menu-item {
+  flex: 2 1 auto;
+  text-align: center;
+  color: var(--text-color);
+}
+
+input[type=button].menu-button {
+  width: 95%;
+  background-color: limegreen;
+  border: none;
+  font-size: 20px;
+  
+}
+
+input[type=button].menu-button:hover {
+  color: blue;
 }
 
 .icon {

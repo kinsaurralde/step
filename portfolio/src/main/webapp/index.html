@@ -9,40 +9,48 @@
 </head>
 
 <body>
+  <div class="subsection" id="navbar">
+    <div class="centered-flex">
+      <div class="menu-item"><a href="#about-me"><input type="button" class="menu-button"  value="About Me" ></a></div>
+      <div class="menu-item"><a href="#projects"><input type="button" class="menu-button"  value="Projects"></a></div>
+      <div class="menu-item"><a href="#cat-gallery"><input type="button" class="menu-button" value="Cat Pictures"></a></div>
+      <div class="menu-item"><a href="#random-message"><input type="button" class="menu-button" value="Random Message"></a></div>
+      <div class="menu-item"><a href="#links"><input type="button" class="menu-button" value="Links"></a></div>
+    </div>
+  </div>
   <div id="content">
-    <h1 class="centered">My Portfolio</h1>
-    <div class="subsection">
+    <div class="subsection" id="about-me">
       <h2>About Me</h2>
       <p>My name is Kyle Insaurralde. I am a junior at UC Davis. My favorite programming language is python. For
-      fun, I like to play minecraft.</p>
+          fun, I like to play minecraft.</p>
     </div>
-    <div class="subsection">
+    <div class="subsection" id="projects">
       <h2>Projects</h2>
       <div class="left-space">
         <h3>Website</h3>
         <div class="left-space">
           <p>I have another project website that I add stuff to. It contains the projects listed below along
-          with a few others.</p>
+              with a few others.</p>
           <a href="https://kinsaurralde.com/" target="_blank">Link</a>
         </div>
         <h3>ws281x LEDs</h3>
         <div class="left-space">
           <p>
-          ws281x LEDs are LED strips in which every LED can be individually controlled.
-          One device that can control them is a raspberry pi.
-          This project is a python flask webserver that provides a website to control the rgb lights
-          through the rpi_ws281x library.
-          It has animations.
+              ws281x LEDs are LED strips in which every LED can be individually controlled.
+              One device that can control them is a raspberry pi.
+              This project is a python flask webserver that provides a website to control the rgb lights
+              through the rpi_ws281x library.
+              It has animations.
           </p>
           <a href="https://github.com/kinsaurralde/ws_281x-lights" target="_blank">Github Link</a>
         </div>
         <h3>Weather</h3>
         <div class="left-space">
           <p>
-          This page displays the weather at your current location. It can also get the weather at user
-          inputted coordinates.
-          It displays todays high, low, and current temperatures, and has a second row that provides more
-          options.
+              This page displays the weather at your current location. It can also get the weather at user
+              inputted coordinates.
+              It displays todays high, low, and current temperatures, and has a second row that provides more
+              options.
           </p>
           <a href="https://weather.kinsaurralde.com/" target="_blank">Link</a>
         </div>
@@ -53,7 +61,7 @@
         </div>
       </div>
     </div>
-    <div class="subsection">
+    <div class="subsection" id="cat-gallery">
       <h2>Cat</h2>
       <div class="image-container" id="cat-gallery-image"></div>
       <div style="width: 800px" class="centered-flex">
@@ -63,19 +71,19 @@
         <input type="button" class="gallery-button" value="Next Photo" onclick="nextCatPhoto()">
       </div>
     </div>
-    <div class="subsection">
+    <div class="subsection" id="random-message">
       <h2>Random Message</h2>
       <input type="button" value="Click here to get a random message" onclick="addRandomGreeting()">
       <div class="bordered">
         <div id="greeting-container"></div>
       </div>
     </div>
-    <div class="subsection">
+    <div class="subsection" id="links">
       <h2>Links</h2>
       <a href="https://github.com/kinsaurralde" target="_blank">
       <picture>
-          <source srcset="/icons/GitHub-Mark-Light-120px-plus.png" media="(prefers-color-scheme: dark)">
-          <img class="icon" src="/icons/GitHub-Mark-120px-plus.png">
+        <source srcset="/icons/GitHub-Mark-Light-120px-plus.png" media="(prefers-color-scheme: dark)">
+        <img class="icon" src="/icons/GitHub-Mark-120px-plus.png">
       </picture>
       </a>
       <a href="https://www.linkedin.com/in/kyle-insaurralde-a0397a165" target="_blank">
