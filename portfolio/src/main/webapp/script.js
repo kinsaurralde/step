@@ -30,10 +30,10 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
-let cat_photo_num = 0;
-let cat_gallery_image = document.getElementById('cat-gallery-image');
-let cat_gallery_subtitle = document.getElementById('cat-gallery-subtitle');
-let cat_photos = [
+let catPhotoNum = 0;
+let catGalleryImage = document.getElementById('cat-gallery-image');
+let catGallerySubtitle = document.getElementById('cat-gallery-subtitle');
+let catPhotos = [
   {'filename': 'simba.jpg', 'subtitle': 'Simba sleeping part 1', 'img': null},
   {'filename': 'simba_2.jpg', 'subtitle': 'Simba sleeping part 2', 'img': null},
   {'filename': 'IMG_1346.JPG', 'subtitle': 'Simba in a box', 'img': null},
@@ -47,60 +47,77 @@ let cat_photos = [
   {'filename': 'IMG_7812.JPG', 'subtitle': 'Looking at something', 'img': null},
   {'filename': 'IMG_6657.jpeg', 'subtitle': 'Christmas costume', 'img': null},
 ];
-const max_width = 800;
-const max_height = 600;
+const MAX_WIDTH = 800;
+const MAX_HEIGHT = 600;
 
 changeCatPhoto(0);
 
+/**
+ * Switches image in cat gallery
+ * @param {number} num
+ */
 function changeCatPhoto(num) {
-  cat_gallery_subtitle.innerText = cat_photos[num]['subtitle'];
-  if (cat_photos[num]['img'] == null) {
-    let new_image = new Image();
-    new_image.onload = function() {
-      let width = new_image.width;
-      let height = new_image.height;
-      if (width / height > max_width / max_height) {
-        let scale_factor = max_width / width;
-        let new_height = height * scale_factor;
-        new_image.style.width = max_width + 'px';
-        new_image.style.height = new_height + 'px';
-        new_image.style.marginTop = ((max_height - new_height) / 2) + 'px';
-      } else {
-        let scale_factor = max_height / height;
-        let new_width = width * scale_factor;
-        new_image.style.width = new_width + 'px';
-        new_image.style.height = max_height + 'px';
-        new_image.style.marginLeft = ((max_width - new_width) / 2) + 'px';
+  if (catPhotos[num]['img'] == null) { /* Photo only needs to be loaded once */
+    let newImage = new Image();
+    newImage.onload = function() {
+      let width = newImage.width;
+      let height = newImage.height;
+      if (width / height > MAX_WIDTH /
+              MAX_HEIGHT) { /* Set width to MAX_WIDTH and scale height */
+        let scaleFactor = MAX_WIDTH / width;
+        let newHeight = height * scaleFactor;
+        newImage.style.width = MAX_WIDTH + 'px';
+        newImage.style.height = newHeight + 'px';
+        newImage.style.marginTop =
+            ((MAX_HEIGHT - newHeight) / 2) + 'px'; /* Center photo vertically */
+      } else { /* Set height to MAX_HEIGHT and scale width */
+        let scaleFactor = MAX_HEIGHT / height;
+        let newWidth = width * scaleFactor;
+        newImage.style.width = newWidth + 'px';
+        newImage.style.height = MAX_HEIGHT + 'px';
+        newImage.style.marginLeft =
+            ((MAX_WIDTH - newWidth) / 2) + 'px'; /* Center photo horizontally */
       }
-      new_image.alt = cat_photos[num]['subtitle'];
-      cat_photos[num][2] = new_image;
-      cat_gallery_image.innerHTML = '';
-      cat_gallery_image.appendChild(new_image);
+      newImage.alt = catPhotos[num]['subtitle'];
+      catPhotos[num]['img'] = newImage;
+      catGalleryImage.innerHTML = '';
+      catGallerySubtitle.innerText = catPhotos[num]['subtitle'];
+      catGalleryImage.appendChild(newImage);
     };
-    new_image.src = '/images/' + cat_photos[num]['filename'];
+    newImage.src = '/images/' + catPhotos[num]['filename'];
   } else {
-    cat_gallery_image.innerHTML = '';
-    cat_gallery_image.appendChild(cat_photos[num]['img']);
+    catGalleryImage.innerHTML = '';
+    catGallerySubtitle.innerText = catPhotos[num]['subtitle'];
+    catGalleryImage.appendChild(catPhotos[num]['img']);
   }
 }
 
+/**
+ * Sets catPhotoNum to previous photo number then changes to that photo
+ */
 function previousCatPhoto() {
-  if (cat_photo_num > 0) {
-    cat_photo_num -= 1;
+  if (catPhotoNum > 0) {
+    catPhotoNum -= 1;
   } else {
-    cat_photo_num = cat_photos.length - 1;
+    catPhotoNum = catPhotos.length - 1;
   }
-  changeCatPhoto(cat_photo_num);
+  changeCatPhoto(catPhotoNum);
 }
 
+/**
+ * Sets catPhotoNum to next photo number then changes to that photo
+ */
 function nextCatPhoto() {
-  cat_photo_num = (cat_photo_num + 1) % cat_photos.length;
-  changeCatPhoto(cat_photo_num);
+  catPhotoNum = (catPhotoNum + 1) % catPhotos.length;
+  changeCatPhoto(catPhotoNum);
 }
 
+/**
+ * Sets catPhotoNum to a random photo number then changes to that photo
+ */
 function randomCatPhoto() {
-  cat_photo_num = Math.floor(Math.random() * cat_photos.length);
-  changeCatPhoto(cat_photo_num);
+  catPhotoNum = Math.floor(Math.random() * catPhotos.length);
+  changeCatPhoto(catPhotoNum);
 }
 
 function toggleTheme() {
