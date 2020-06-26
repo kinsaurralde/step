@@ -1,3 +1,37 @@
+input[type=button] {
+  background-color: rgb(200, 200, 200);
+  border: 2px solid rgb(100, 100, 100);
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: 28px;
+}
+
+input[type=button]:hover {
+  border: 2px solid yellow;
+}
+
+input[type=button]:focus {
+  border: 2px solid green;
+  outline: none;
+}
+
+input[type=button]:active {
+  border: 2px solid blue;
+  outline: none;
+}
+
+a {
+  color: blue;
+}
+
+a:focus {
+  outline: 2px solid green;
+}
+
+a:visited {
+  color: red;
+}
+
 #content {
   margin-left: auto;
   margin-right: auto;
@@ -9,7 +43,13 @@
   margin-top: 20px;
 }
 
-#title {
+.centered-flex {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.centered {
   text-align: center;
 }
 
@@ -21,15 +61,31 @@
 }
 
 .subsection:hover {
-  background-color: rgba(10, 10, 10, .1);
+  background-color: rgba(10, 10, 10, .05);
 }
 
-.image {
+.image-container {
   width: 800px;
   height: 600px;
   border: 2px solid black;
+  background: lightgrey;
+}
+
+.gallery-button {
+  width: 30%;
+  margin: 5px;
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+  padding: 10px;
 }
 
 .bordered {
   border: 2px solid black;
+}
+
+.left-space {
+  margin-left: 35px;
 }
