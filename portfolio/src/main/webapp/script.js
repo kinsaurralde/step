@@ -50,7 +50,6 @@ changeCatPhoto(0);
  * @param {number} num
  */
 function changeCatPhoto(num) {
-  catGallerySubtitle.innerText = catPhotos[num]["subtitle"];
   if (catPhotos[num]["img"] == null) { // Photo only needs to be loaded once
     let newImage = new Image();
     newImage.onload = function() {
@@ -72,11 +71,13 @@ function changeCatPhoto(num) {
       newImage.alt = catPhotos[num]["subtitle"];
       catPhotos[num][2] = newImage;
       catGalleryImage.innerHTML = "";
+      catGallerySubtitle.innerText = catPhotos[num]["subtitle"];
       catGalleryImage.appendChild(newImage);
     }
     newImage.src = "/images/" + catPhotos[num]["filename"];
   } else {
     catGalleryImage.innerHTML = "";
+    catGallerySubtitle.innerText = catPhotos[num]["subtitle"];
     catGalleryImage.appendChild(catPhotos[num]["img"]);
   }
 }
