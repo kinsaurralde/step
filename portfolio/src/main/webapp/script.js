@@ -120,6 +120,9 @@ function randomCatPhoto() {
   changeCatPhoto(catPhotoNum);
 }
 
+/**
+ * Switch theme between light and dark mode
+ */
 function toggleTheme() {
   let cssVars = document.getElementsByTagName('html')[0].style;
   let curTheme = cssVars.getPropertyValue('--background-color');
@@ -141,11 +144,12 @@ function toggleTheme() {
   cssVars.setProperty('--menu-color', 'var(--' + newTheme + '-menu-color)');
 }
 
+/**
+ * Request list of comments from server and display them
+ */
 function getComments() {
   fetch('/data').then(response => response.json()).then((comments => {
-    //document.getElementById('comments-container').innerText = comments;
     const commentsContainer = document.getElementById('comments-container');
-    console.log(comments);
     for (let i in comments) {
       commentsContainer.innerText += comments[i] + '\n';
     }
