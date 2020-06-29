@@ -140,3 +140,9 @@ function toggleTheme() {
       '--input-border-color', 'var(--' + newTheme + '-input-border-color)');
   cssVars.setProperty('--menu-color', 'var(--' + newTheme + '-menu-color)');
 }
+
+function getComments() {
+  fetch('/data').then(response => response.text()).then((comments => {
+    document.getElementById('comments-container').innerText = comments;
+  }));
+}
