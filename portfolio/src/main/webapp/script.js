@@ -142,7 +142,12 @@ function toggleTheme() {
 }
 
 function getComments() {
-  fetch('/data').then(response => response.text()).then((comments => {
-    document.getElementById('comments-container').innerText = comments;
+  fetch('/data').then(response => response.json()).then((comments => {
+    //document.getElementById('comments-container').innerText = comments;
+    const commentsContainer = document.getElementById('comments-container');
+    console.log(comments);
+    for (let i in comments) {
+      commentsContainer.innerText += comments[i] + '\n';
+    }
   }));
 }
