@@ -150,6 +150,7 @@ function toggleTheme() {
 function getComments() {
   fetch('/data').then(response => response.json()).then((comments => {
     const commentsContainer = document.getElementById('comments-container');
+    commentsContainer.innerText = "";
     for (let i in comments) {
       commentsContainer.innerText += comments[i] + '\n';
     }
