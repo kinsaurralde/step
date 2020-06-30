@@ -165,6 +165,9 @@ function getComments() {
       }));
 }
 
+/**
+ * Tell server to delete all comments
+ */
 function deleteComments() {
   const request = new Request('/delete-data', {method: 'POST'});
   fetch(request).then(function() {
@@ -172,6 +175,9 @@ function deleteComments() {
   });
 }
 
+/**
+ * Send new comment to server to add
+ */
 function addComment() {
   const request = new Request('/data', {
     method: 'POST',
