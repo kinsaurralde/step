@@ -43,18 +43,12 @@ input {
   margin-top: 5px;
   margin-bottom: 5px;
   height: 24px;
-}
-
-input[type=number] {
-  /* margin-top: 2px;
-  margin-bottom: 2px; */
-  
-}
-
-input[type=button], input[type=submit] {
   background-color: var(--input-color);
   border: 2px solid var(--input-border-color);
   color: var(--text-color);
+}
+
+input[type=button], input[type=submit] {
   height: 30px;
 }
 
