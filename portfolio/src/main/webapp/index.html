@@ -84,7 +84,13 @@
         <input type="text" name="comment-text" placeholder="Enter Comment Here">
         <input type="submit" value="Submit">
       </form>
-      <input type="button" value="Update Comments" onclick="getComments()">
+      <div class="centered-flex">
+        <div class="div-text" style="margin: 10px">Number of Comments</div>
+        <input type="number" value="5" min="1" max="20" id="num-comments">
+        <div class="div-text" style="margin: 10px">Page</div>
+        <input type="number" value="1" min="1" max="20" id="page">
+        <input type="button" value="Update Comments" onclick="getComments()" style="margin-left: 10px">
+      </div>
       <div class="div-text" id="comments-container"></div>
     </div>
     <div class="subsection" id="links" style="border: none;">

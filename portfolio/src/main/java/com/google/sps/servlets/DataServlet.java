@@ -18,9 +18,11 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.io.IOException;
+import java.util.List;
 import java.util.ArrayList;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,16 +32,18 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  //ArrayList<String> comments = new ArrayList<String>();
   DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    int numComments = Integer.parseInt(getParameter(request, "num-comments", "5"));
+    int page = Integer.parseInt(getParameter(request, "page", "1"));
+    String other = getParameter(request, "other", "None");
     Gson gson = new Gson();
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-    PreparedQuery results = datastore.prepare(query);
+    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(numComments).offset(numComments * (page - 1)));
     ArrayList<String> comments = new ArrayList<String>();
-    for (Entity entity : results.asIterable()) {
+    for (Entity entity : results) {
       comments.add((String) entity.getProperty("text"));
     }
     String json = gson.toJson(comments);
@@ -50,11 +54,13 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long timestamp = System.currentTimeMillis();
-    String text = getParameter(request, "comment-text", "a");
-    Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("text", text);
-    commentEntity.setProperty("timestamp", timestamp);
-    datastore.put(commentEntity);
+    String text = getParameter(request, "comment-text", "");
+    if (text.length() > 0) {
+      Entity commentEntity = new Entity("Comment");
+      commentEntity.setProperty("text", text);
+      commentEntity.setProperty("timestamp", timestamp);
+      datastore.put(commentEntity);
+    }
     response.sendRedirect("/#comments");
   }
 

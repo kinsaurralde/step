@@ -148,7 +148,10 @@ function toggleTheme() {
  * Request list of comments from server and display them
  */
 function getComments() {
-  fetch('/data').then(response => response.json()).then((comments => {
+  let numComments = document.getElementById("num-comments").value;
+  let page = document.getElementById("page").value;
+  let queryString = "num-comments=" + numComments + "&page=" + page;
+  fetch('/data' + '?' + queryString).then(response => response.json()).then((comments => {
     const commentsContainer = document.getElementById('comments-container');
     commentsContainer.innerText = "";
     for (let i in comments) {
