@@ -13,17 +13,17 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
-import com.google.gson.Gson;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.gson.Gson;
 import java.io.IOException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +41,8 @@ public class DataServlet extends HttpServlet {
     String other = getParameter(request, "other", "None");
     Gson gson = new Gson();
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(numComments).offset(numComments * (page - 1)));
+    List<Entity> results = datastore.prepare(query).asList(
+        FetchOptions.Builder.withLimit(numComments).offset(numComments * (page - 1)));
     ArrayList<String> comments = new ArrayList<String>();
     for (Entity entity : results) {
       comments.add((String) entity.getProperty("text"));
@@ -50,7 +51,6 @@ public class DataServlet extends HttpServlet {
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
-
 
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long timestamp = System.currentTimeMillis();
