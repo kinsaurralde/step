@@ -55,6 +55,7 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long timestamp = System.currentTimeMillis();
     String text = getParameter(request, "comment-text", "");
+    System.out.println("Add Comment: " + text);
     if (text.length() > 0) {
       Entity commentEntity = new Entity("Comment");
       commentEntity.setProperty("text", text);

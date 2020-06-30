@@ -80,10 +80,8 @@
     </div>
     <div class="subsection" id="comments">
       <h2>Comments</h2>
-      <form action="/data" method="post">
-        <input type="text" name="comment-text" placeholder="Enter Comment Here">
-        <input type="submit" value="Submit">
-      </form>
+      <input type="text" name="comment-text" id="comment-text" placeholder="Enter Comment Here">
+      <input type="button" value="Submit" onclick="addComment()">
       <div class="centered-flex">
         <div class="div-text" style="margin: 10px">Number of Comments</div>
         <input type="number" value="5" min="1" max="20" id="num-comments">
