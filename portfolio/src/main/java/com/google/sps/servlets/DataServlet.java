@@ -50,15 +50,23 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     int numComments = Integer.parseInt(getParameter(request, "num-comments", "5"));
     int page = Integer.parseInt(getParameter(request, "page", "1"));
-    String other = getParameter(request, "other", "None");
-    Gson gson = new Gson();
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+    String sort = getParameter(request, "sort", "time-newest");
+    SortDirection sortDirection = SortDirection.DESCENDING;
+    String sortProperty = "timestamp";
+    if (sort.equals("time-oldest")) {
+      sortDirection = SortDirection.ASCENDING;
+    } else if (sort.equals("name-normal")) {
+      sortDirection = SortDirection.ASCENDING;
+      sortProperty = "name";
+    }
+    Query query = new Query("Comment").addSort(sortProperty, sortDirection);
     List<Entity> results = datastore.prepare(query).asList(
         FetchOptions.Builder.withLimit(numComments).offset(numComments * (page - 1)));
     ArrayList<Comment> comments = new ArrayList<Comment>();
     for (Entity entity : results) {
       comments.add(new Comment((long) entity.getProperty("timestamp"), (String) entity.getProperty("name"), (String) entity.getProperty("text")));
     }
+    Gson gson = new Gson();
     String json = gson.toJson(comments);
     response.setContentType("application/json;");
     response.getWriter().println(json);

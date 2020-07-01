@@ -39,7 +39,7 @@ h1, h2, h3, h4, h5, h6, p {
   color: var(--text-color);
 }
 
-input, textarea {
+input, textarea, select {
   margin-top: 5px;
   margin-bottom: 5px;
   height: 24px;
@@ -52,16 +52,16 @@ input[type=button], input[type=submit] {
   height: 30px;
 }
 
-input:hover, textarea:hover {
+input:hover, textarea:hover, select:hover {
   border: 2px solid yellow;
 }
 
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
   border: 2px solid green;
   outline: none;
 }
 
-input:active, textarea:active {
+input:active, textarea:active, select:active {
   border: 2px solid blue;
   outline: none;
 }
@@ -70,6 +70,10 @@ textarea {
   width: 98%;
   resize: vertical;
   min-height: 50px;
+}
+
+select {
+  height: 30px;
 }
 
 a {
