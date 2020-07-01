@@ -9,14 +9,22 @@
 </head>
 
 <body>
+  <div class="subsection menu-bar" id="navbar">
+    <div class="centered-flex">
+      <div class="menu-item"><a href="#about-me"><input type="button" class="menu-button"  value="About Me" ></a></div>
+      <div class="menu-item"><a href="#projects"><input type="button" class="menu-button"  value="Projects"></a></div>
+      <div class="menu-item"><a href="#cat-gallery"><input type="button" class="menu-button" value="Cat Pictures"></a></div>
+      <div class="menu-item"><a href="#random-message"><input type="button" class="menu-button" value="Random Message"></a></div>
+      <div class="menu-item"><a href="#links"><input type="button" class="menu-button" value="Links"></a></div>
+    </div>
+  </div>
   <div id="content">
-    <h1 class="centered">My Portfolio</h1>
-    <div class="subsection">
+    <div class="subsection" id="about-me">
       <h2>About Me</h2>
       <p>My name is Kyle Insaurralde. I am a junior at UC Davis. My favorite programming language is python. For
           fun, I like to play minecraft.</p>
     </div>
-    <div class="subsection">
+    <div class="subsection" id="projects">
       <h2>Projects</h2>
       <div class="left-space">
         <h3>Website</h3>
@@ -53,31 +61,39 @@
         </div>
       </div>
     </div>
-    <div class="subsection">
+    <div class="subsection" id="cat-gallery">
       <h2>Cat</h2>
       <div class="image-container" id="cat-gallery-image"></div>
       <div style="width: 800px" class="centered-flex">
-        <div class="centered" style="padding: 5px; width: 100%;" id="cat-gallery-subtitle">Test Subtitle</div><br>
+        <div class="centered subtitle div-text" id="cat-gallery-subtitle">LOADING</div><br>
         <input type="button" class="gallery-button" value="Previous Photo" onclick="previousCatPhoto()">
         <input type="button" class="gallery-button" value="Random Photo" onclick="randomCatPhoto()">
         <input type="button" class="gallery-button" value="Next Photo" onclick="nextCatPhoto()">
       </div>
     </div>
-    <div class="subsection">
+    <div class="subsection" id="random-message">
       <h2>Random Message</h2>
       <input type="button" value="Click here to get a random message" onclick="addRandomGreeting()">
       <div class="bordered">
-        <div id="greeting-container"></div>
+        <div class="div-text" id="greeting-container"></div>
       </div>
     </div>
-    <div class="subsection">
+    <div class="subsection" id="links" style="border: none;">
       <h2>Links</h2>
       <a href="https://github.com/kinsaurralde" target="_blank">
-        <img class="icon" src="/icons/GitHub-Mark-120px-plus.png">
+      <picture>
+        <source srcset="/icons/GitHub-Mark-Light-120px-plus.png" media="(prefers-color-scheme: dark)">
+        <img class="icon" src="/icons/GitHub-Mark-120px-plus.png" id="github-icon">
+      </picture>
       </a>
       <a href="https://www.linkedin.com/in/kyle-insaurralde-a0397a165" target="_blank">
         <img class="icon" src="/icons/LI-In-Bug.png" style="width: 70px;">
       </a>
+    </div>
+  </div>
+  <div class="subsection menu-bar" id="footer">
+    <div class="centered-flex">
+      <div class="menu-item"><input type="button" class="menu-button"  value="Toggle Light/Dark Theme" onclick="toggleTheme()"></div>
     </div>
   </div>
 </body>

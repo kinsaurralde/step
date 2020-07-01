@@ -72,14 +72,14 @@ function changeCatPhoto(num) {
             ((MAX_HEIGHT - newHeight) / 2) + 'px'; /* Center photo vertically */
       } else { /* Set height to MAX_HEIGHT and scale width */
         let scaleFactor = MAX_HEIGHT / height;
-        let new_width = width * scaleFactor;
-        newImage.style.width = new_width + 'px';
+        let newWidth = width * scaleFactor;
+        newImage.style.width = newWidth + 'px';
         newImage.style.height = MAX_HEIGHT + 'px';
-        newImage.style.marginLeft = ((MAX_WIDTH - new_width) / 2) +
-            'px'; /* Center photo horizontally */
+        newImage.style.marginLeft =
+            ((MAX_WIDTH - newWidth) / 2) + 'px'; /* Center photo horizontally */
       }
       newImage.alt = catPhotos[num]['subtitle'];
-      catPhotos[num][2] = newImage;
+      catPhotos[num]['img'] = newImage;
       catGalleryImage.innerHTML = '';
       catGallerySubtitle.innerText = catPhotos[num]['subtitle'];
       catGalleryImage.appendChild(newImage);
@@ -118,4 +118,25 @@ function nextCatPhoto() {
 function randomCatPhoto() {
   catPhotoNum = Math.floor(Math.random() * catPhotos.length);
   changeCatPhoto(catPhotoNum);
+}
+
+function toggleTheme() {
+  let cssVars = document.getElementsByTagName('html')[0].style;
+  let curTheme = cssVars.getPropertyValue('--background-color');
+  let newTheme = 'dark';
+  if (curTheme == 'var(--dark-background)') {
+    newTheme = 'light';
+    document.getElementById('github-icon').src =
+        '/icons/GitHub-Mark-120px-plus.png';
+  } else {
+    document.getElementById('github-icon').src =
+        '/icons/GitHub-Mark-Light-120px-plus.png';
+  }
+  cssVars.setProperty(
+      '--background-color', 'var(--' + newTheme + '-background)');
+  cssVars.setProperty('--text-color', 'var(--' + newTheme + '-text)');
+  cssVars.setProperty('--input-color', 'var(--' + newTheme + '-input-color)');
+  cssVars.setProperty(
+      '--input-border-color', 'var(--' + newTheme + '-input-border-color)');
+  cssVars.setProperty('--menu-color', 'var(--' + newTheme + '-menu-color)');
 }

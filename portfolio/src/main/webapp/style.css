@@ -1,6 +1,48 @@
+html {
+  --light-background: white;
+  --light-text: black;
+  --light-input-color: rgb(200, 200, 200);
+  --light-input-border-color: rgb(100, 100, 100);
+  --light-menu-color: limegreen;
+
+  --dark-background: black;
+  --dark-text: white;
+  --dark-input-color: rgb(100, 100, 100);
+  --dark-input-border-color: rgb(200, 200, 200);
+  --dark-menu-color: darkgreen;
+  
+  --background-color: var(--light-background);
+  --text-color: var(--light-text);
+  --input-color: var(--light-input-color);
+  --input-border-color: var(--light-input-border-color);
+  --menu-color: var(--light-menu-color);
+
+  transition: 0.5s;
+  background-color: var(--background-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    --background-color: var(--dark-background);
+    --text-color: var(--dark-text);
+    --input-color: var(--dark-input-color);
+    --input-border-color: var(--dark-input-border-color);
+    --menu-color: var(--dark-menu-color);
+  }
+}
+
+body {
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  color: var(--text-color);
+}
+
 input[type=button] {
-  background-color: rgb(200, 200, 200);
-  border: 2px solid rgb(100, 100, 100);
+  background-color: var(--input-color);
+  border: 2px solid var(--input-border-color);
+  color: var(--text-color);
   margin-top: 5px;
   margin-bottom: 5px;
   height: 28px;
@@ -21,15 +63,19 @@ input[type=button]:active {
 }
 
 a {
+  color: green;
+}
+
+a:visited {
+  color: red;
+}
+
+a:hover {
   color: blue;
 }
 
 a:focus {
   outline: 2px solid green;
-}
-
-a:visited {
-  color: red;
 }
 
 #content {
@@ -41,6 +87,11 @@ a:visited {
 
 #greeting-container {
   margin-top: 20px;
+}
+
+#footer {
+  border-top: 2px solid blue;
+  border-bottom: none;
 }
 
 .centered-flex {
@@ -55,25 +106,59 @@ a:visited {
 
 .subsection {
   background-color: rgba(10, 10, 10, 0);
-  border-top: 1px solid blue;
+  border-bottom: 2px solid blue;
   padding-bottom: 15px;
-  transition: .5s;
 }
 
 .subsection:hover {
   background-color: rgba(10, 10, 10, .05);
 }
 
+.subtitle {
+  padding: 5px; 
+  width: 100%;
+}
+
+.div-text {
+  color: var(--text-color);
+}
+
 .image-container {
   width: 800px;
   height: 600px;
-  border: 2px solid black;
-  background: lightgrey;
+  border: 2px solid var(--text-color);
+  background: var(--input-color);
 }
 
 .gallery-button {
   width: 30%;
   margin: 5px;
+}
+
+.menu-bar:hover {
+  background-color: var(--menu-color);
+}
+
+.menu-bar {
+  background-color: var(--menu-color);
+}
+
+.menu-item {
+  flex: 2 1 auto;
+  text-align: center;
+  color: var(--text-color);
+}
+
+input[type=button].menu-button {
+  width: 95%;
+  background-color: var(--menu-color);
+  border: none;
+  font-size: 20px;
+  
+}
+
+input[type=button].menu-button:hover {
+  color: blue;
 }
 
 .icon {
@@ -83,7 +168,7 @@ a:visited {
 }
 
 .bordered {
-  border: 2px solid black;
+  border: 2px solid var(--text-color);
 }
 
 .left-space {
