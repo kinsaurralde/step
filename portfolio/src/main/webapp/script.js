@@ -160,7 +160,7 @@ function getComments() {
         const commentsContainer = document.getElementById('comments-container');
         commentsContainer.innerText = '';
         for (let i in comments) {
-          commentsContainer.innerText += comments[i] + '\n';
+          commentsContainer.innerText += comments[i]["text"] + '\n';
         }
       }));
 }
@@ -183,7 +183,9 @@ function addComment() {
     method: 'POST',
     headers: new Headers({'content-type': 'application/x-www-form-urlencoded'}),
     body: 'comment-text=' +
-        encodeURIComponent(document.getElementById('comment-text').value)
+        encodeURIComponent(document.getElementById('comment-text').value) +
+        '&comment-name=' +
+        encodeURIComponent(document.getElementById('comment-name').value)
   });
   document.getElementById('comment-text').value = '';
   fetch(request).then(function() {

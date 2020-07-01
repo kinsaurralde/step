@@ -39,7 +39,7 @@ h1, h2, h3, h4, h5, h6, p {
   color: var(--text-color);
 }
 
-input {
+input, textarea {
   margin-top: 5px;
   margin-bottom: 5px;
   height: 24px;
@@ -52,18 +52,24 @@ input[type=button], input[type=submit] {
   height: 30px;
 }
 
-input:hover {
+input:hover, textarea:hover {
   border: 2px solid yellow;
 }
 
-input:focus {
+input:focus, textarea:focus {
   border: 2px solid green;
   outline: none;
 }
 
-input:active {
+input:active, textarea:active {
   border: 2px solid blue;
   outline: none;
+}
+
+textarea {
+  width: 98%;
+  resize: vertical;
+  min-height: 50px;
 }
 
 a {
@@ -116,6 +122,11 @@ a:focus {
 
 .subsection:hover {
   background-color: rgba(10, 10, 10, .05);
+}
+
+.divider {
+  border-bottom: 1px solid blue;
+  margin: 5px;
 }
 
 .subtitle {
