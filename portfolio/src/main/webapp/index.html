@@ -80,6 +80,16 @@
     </div>
     <div class="subsection" id="comments">
       <h2>Comments</h2>
+      <input type="text" name="comment-text" id="comment-text" placeholder="Enter Comment Here">
+      <input type="button" value="Submit" onclick="addComment()">
+      <div class="centered-flex">
+        <div class="div-text" style="margin: 10px">Number of Comments</div>
+        <input type="number" value="5" min="1" max="20" id="num-comments">
+        <div class="div-text" style="margin: 10px">Page</div>
+        <input type="number" value="1" min="1" max="20" id="page">
+        <input type="button" value="Update Comments" onclick="getComments()" style="margin-left: 10px">
+        <input type="button" value="Delete ALL Comments" onclick="deleteComments()" style="margin-left: 10px">
+      </div>
       <div class="div-text" id="comments-container"></div>
     </div>
     <div class="subsection" id="links" style="border: none;">

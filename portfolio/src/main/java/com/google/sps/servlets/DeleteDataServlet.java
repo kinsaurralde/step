@@ -30,37 +30,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
-public class DataServlet extends HttpServlet {
+@WebServlet("/delete-data")
+public class DeleteDataServlet extends HttpServlet {
   DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    int numComments = Integer.parseInt(getParameter(request, "num-comments", "5"));
-    int page = Integer.parseInt(getParameter(request, "page", "1"));
-    String other = getParameter(request, "other", "None");
-    Gson gson = new Gson();
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-    List<Entity> results = datastore.prepare(query).asList(
-        FetchOptions.Builder.withLimit(numComments).offset(numComments * (page - 1)));
-    ArrayList<String> comments = new ArrayList<String>();
-    for (Entity entity : results) {
-      comments.add((String) entity.getProperty("text"));
-    }
-    String json = gson.toJson(comments);
-    response.setContentType("application/json;");
-    response.getWriter().println(json);
-  }
-
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    long timestamp = System.currentTimeMillis();
-    String text = getParameter(request, "comment-text", "");
-    System.out.println("Add Comment: " + text);
-    if (text.length() > 0) {
-      Entity commentEntity = new Entity("Comment");
-      commentEntity.setProperty("text", text);
-      commentEntity.setProperty("timestamp", timestamp);
-      datastore.put(commentEntity);
+    Query query = new Query("Comment");
+    PreparedQuery results = datastore.prepare(query);
+    for (Entity entity : results.asIterable()) {
+      datastore.delete(entity.getKey());
     }
     response.sendRedirect("/#comments");
   }

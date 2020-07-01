@@ -148,10 +148,45 @@ function toggleTheme() {
  * Request list of comments from server and display them
  */
 function getComments() {
-  fetch('/data').then(response => response.json()).then((comments => {
-    const commentsContainer = document.getElementById('comments-container');
-    for (let i in comments) {
-      commentsContainer.innerText += comments[i] + '\n';
-    }
-  }));
+  let numComments = document.getElementById('num-comments').value;
+  let page = document.getElementById('page').value;
+  let queryString = 'num-comments=' + numComments + '&page=' + page;
+  fetch(
+      '/data' +
+      '?' + queryString)
+      .then(response => response.json())
+      .then((comments => {
+        console.debug(comments);
+        const commentsContainer = document.getElementById('comments-container');
+        commentsContainer.innerText = '';
+        for (let i in comments) {
+          commentsContainer.innerText += comments[i] + '\n';
+        }
+      }));
+}
+
+/**
+ * Tell server to delete all comments
+ */
+function deleteComments() {
+  const request = new Request('/delete-data', {method: 'POST'});
+  fetch(request).then(function() {
+    getComments();
+  });
+}
+
+/**
+ * Send new comment to server to add
+ */
+function addComment() {
+  const request = new Request('/data', {
+    method: 'POST',
+    headers: new Headers({'content-type': 'application/x-www-form-urlencoded'}),
+    body: 'comment-text=' +
+        encodeURIComponent(document.getElementById('comment-text').value)
+  });
+  document.getElementById('comment-text').value = '';
+  fetch(request).then(function() {
+    getComments();
+  });
 }
