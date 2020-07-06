@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -29,16 +30,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/** Servlet that adds and returns comments */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private static String DEFAULT_COMMENTS_COUNT = "5";
+  private static String DEFAULT_PAGE = "1";
+  private static String DEFAULT_COMMENT = "";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    int numComments = Integer.parseInt(getParameter(request, "num-comments", "5"));
-    int page = Integer.parseInt(getParameter(request, "page", "1"));
-    String other = getParameter(request, "other", "None");
+    int numComments = Integer.parseInt(
+        getRequestParameterOrDefault(request, "num-comments", DEFAULT_COMMENTS_COUNT));
+    int page = Integer.parseInt(getRequestParameterOrDefault(request, "page", DEFAULT_PAGE));
     Gson gson = new Gson();
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     List<Entity> results = datastore.prepare(query).asList(
@@ -54,7 +58,7 @@ public class DataServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long timestamp = System.currentTimeMillis();
-    String text = getParameter(request, "comment-text", "");
+    String text = getRequestParameterOrDefault(request, "comment-text", DEFAULT_COMMENT);
     System.out.println("Add Comment: " + text);
     if (text.length() > 0) {
       Entity commentEntity = new Entity("Comment");
@@ -69,7 +73,8 @@ public class DataServlet extends HttpServlet {
    * @return the request parameter, or the default value if the parameter
    *         was not specified by the client
    */
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+  private String getRequestParameterOrDefault(
+      HttpServletRequest request, String name, String defaultValue) {
     String value = request.getParameter(name);
     if (value == null) {
       return defaultValue;
