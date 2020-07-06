@@ -148,12 +148,12 @@ function createCommentDiv(data) {
   const div = document.createElement('div');
   div.className = 'comment-div';
   const name = document.createElement('h4');
-  name.textContent = data["name"];
+  name.textContent = data['name'];
   const text = document.createElement('p');
-  text.textContent = data["text"];
+  text.textContent = data['text'];
   const timestamp = document.createElement('h6');
-  const datetime = new Date(data["timestamp"]);
-  timestamp.textContent = datetime.toLocaleString("en-US");
+  const datetime = new Date(data['timestamp']);
+  timestamp.textContent = datetime.toLocaleString('en-US');
   div.appendChild(name);
   div.appendChild(text);
   div.appendChild(timestamp);
@@ -167,7 +167,8 @@ function getComments() {
   const numComments = document.getElementById('num-comments').value;
   const page = document.getElementById('page').value;
   const sort = document.getElementById('comment-sort').value;
-  const queryString = 'num-comments=' + numComments + '&page=' + page + '&sort=' + sort;
+  const queryString =
+      'num-comments=' + numComments + '&page=' + page + '&sort=' + sort;
   fetch(
       '/data' +
       '?' + queryString)

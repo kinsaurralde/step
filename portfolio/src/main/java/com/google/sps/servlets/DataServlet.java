@@ -44,7 +44,7 @@ public class DataServlet extends HttpServlet {
     String text;
     String name;
     long timestamp;
-    
+
     public Comment(long timestamp, String name, String text) {
       this.timestamp = timestamp;
       this.name = name;
@@ -71,7 +71,8 @@ public class DataServlet extends HttpServlet {
         FetchOptions.Builder.withLimit(numComments).offset(numComments * (page - 1)));
     ArrayList<Comment> comments = new ArrayList<Comment>();
     for (Entity entity : results) {
-      comments.add(new Comment((long) entity.getProperty("timestamp"), (String) entity.getProperty("name"), (String) entity.getProperty("text")));
+      comments.add(new Comment((long) entity.getProperty("timestamp"),
+          (String) entity.getProperty("name"), (String) entity.getProperty("text")));
     }
     Gson gson = new Gson();
     String json = gson.toJson(comments);
