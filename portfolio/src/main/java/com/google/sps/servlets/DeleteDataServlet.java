@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that deletes all comments */
 @WebServlet("/delete-data")
 public class DeleteDataServlet extends HttpServlet {
-  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Comment");

@@ -33,10 +33,10 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that adds and returns comments */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  private static String DEFAULT_COMMENTS_COUNT = "5";
-  private static String DEFAULT_PAGE = "1";
-  private static String DEFAULT_COMMENT = "";
+  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private static final String DEFAULT_COMMENTS_COUNT = "5";
+  private static final String DEFAULT_PAGE = "1";
+  private static final String DEFAULT_COMMENT = "";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
