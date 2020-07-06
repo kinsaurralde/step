@@ -55,7 +55,7 @@ public class DataServlet extends HttpServlet {
     int numComments = Integer.parseInt(
         getRequestParameterOrDefault(request, "num-comments", DEFAULT_COMMENTS_COUNT));
     int page = Integer.parseInt(getRequestParameterOrDefault(request, "page", DEFAULT_PAGE));
-    String sort = getRequestParameterOrDefault(request, "sort", "");
+    String sort = getRequestParameterOrDefault(request, "sort", DEFAULT_SORT);
     SortDirection sortDirection = SortDirection.DESCENDING;
     String sortProperty = "timestamp";
     if (sort.equals("time-oldest")) {
