@@ -91,7 +91,7 @@
         <div class="div-text" style="margin: 10px">Page</div>
         <input type="number" value="1" min="1" max="20" id="page">
         <div class="div-text" style="margin: 10px">Sort</div>
-        <select id="comment-sort">
+        <select id="comment-sort" oninput="getComments()">
           <option value="time-newest">Newest</option>
           <option value="time-oldest">Oldest</option>
           <option value="name-normal">Names</option>
