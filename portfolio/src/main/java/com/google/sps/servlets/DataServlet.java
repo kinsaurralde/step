@@ -36,8 +36,6 @@ public class DataServlet extends HttpServlet {
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private static final String DEFAULT_COMMENTS_COUNT = "5";
   private static final String DEFAULT_PAGE = "1";
-  private static final String DEFAULT_COMMENT = "";
-  private static final String DEFAULT_NAME = "";
   private static final String DEFAULT_SORT = "time-newest";
 
   private static class Comment {
@@ -57,7 +55,7 @@ public class DataServlet extends HttpServlet {
     int numComments = Integer.parseInt(
         getRequestParameterOrDefault(request, "num-comments", DEFAULT_COMMENTS_COUNT));
     int page = Integer.parseInt(getRequestParameterOrDefault(request, "page", DEFAULT_PAGE));
-    String sort = getRequestParameterOrDefault(request, "sort", DEFAULT_SORT);
+    String sort = getRequestParameterOrDefault(request, "sort", "");
     SortDirection sortDirection = SortDirection.DESCENDING;
     String sortProperty = "timestamp";
     if (sort.equals("time-oldest")) {
@@ -82,8 +80,8 @@ public class DataServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long timestamp = System.currentTimeMillis();
-    String text = getRequestParameterOrDefault(request, "comment-text", DEFAULT_COMMENT);
-    String name = getRequestParameterOrDefault(request, "comment-name", DEFAULT_NAME);
+    String text = getRequestParameterOrDefault(request, "comment-text", "");
+    String name = getRequestParameterOrDefault(request, "comment-name", "");
     if (text.length() > 0) {
       Entity commentEntity = new Entity("Comment");
       commentEntity.setProperty("text", text);
