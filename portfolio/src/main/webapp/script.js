@@ -148,7 +148,7 @@ function createCommentDiv(data) {
   const div = document.createElement('div');
   div.className = 'comment-div';
   const name = document.createElement('h4');
-  name.textContent = data['name'];
+  name.textContent = data['name'] + ' (' + data['email'] + ')';
   const text = document.createElement('p');
   text.textContent = data['text'];
   const timestamp = document.createElement('h6');
