@@ -42,11 +42,11 @@ public class DataServlet extends HttpServlet {
   private static final String DEFAULT_SORT = "time-newest";
 
   private static class Comment {
-    long timestamp;
-    String name = "";
-    String text = "";
-    String email = "";
-    boolean hideEmail;
+    private final long timestamp;
+    private String name = "";
+    private String text = "";
+    private String email = "";
+    private final boolean hideEmail;
 
     public Comment(Entity entity) {
       this.hideEmail = (boolean) entity.getProperty("hide_email");
