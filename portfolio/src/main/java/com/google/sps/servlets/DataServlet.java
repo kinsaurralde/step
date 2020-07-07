@@ -36,21 +36,43 @@ public class DataServlet extends HttpServlet {
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private static final String DEFAULT_COMMENTS_COUNT = "5";
   private static final String DEFAULT_PAGE = "1";
-  private static final String DEFAULT_COMMENT = "";
+  private static final String DEFAULT_SORT = "time-newest";
+
+  private static class Comment {
+    private final long timestamp;
+    private final String name;
+    private final String text;
+
+    public Comment(long timestamp, String name, String text) {
+      this.timestamp = timestamp;
+      this.name = name;
+      this.text = text;
+    }
+  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     int numComments = Integer.parseInt(
         getRequestParameterOrDefault(request, "num-comments", DEFAULT_COMMENTS_COUNT));
     int page = Integer.parseInt(getRequestParameterOrDefault(request, "page", DEFAULT_PAGE));
-    Gson gson = new Gson();
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+    String sort = getRequestParameterOrDefault(request, "sort", DEFAULT_SORT);
+    SortDirection sortDirection = SortDirection.DESCENDING;
+    String sortProperty = "timestamp";
+    if (sort.equals("time-oldest")) {
+      sortDirection = SortDirection.ASCENDING;
+    } else if (sort.equals("name-normal")) {
+      sortDirection = SortDirection.ASCENDING;
+      sortProperty = "name";
+    }
+    Query query = new Query("Comment").addSort(sortProperty, sortDirection);
     List<Entity> results = datastore.prepare(query).asList(
         FetchOptions.Builder.withLimit(numComments).offset(numComments * (page - 1)));
-    ArrayList<String> comments = new ArrayList<String>();
+    ArrayList<Comment> comments = new ArrayList<Comment>();
     for (Entity entity : results) {
-      comments.add((String) entity.getProperty("text"));
+      comments.add(new Comment((long) entity.getProperty("timestamp"),
+          (String) entity.getProperty("name"), (String) entity.getProperty("text")));
     }
+    Gson gson = new Gson();
     String json = gson.toJson(comments);
     response.setContentType("application/json;");
     response.getWriter().println(json);
@@ -58,11 +80,12 @@ public class DataServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long timestamp = System.currentTimeMillis();
-    String text = getRequestParameterOrDefault(request, "comment-text", DEFAULT_COMMENT);
-    System.out.println("Add Comment: " + text);
+    String text = getRequestParameterOrDefault(request, "comment-text", "");
+    String name = getRequestParameterOrDefault(request, "comment-name", "");
     if (text.length() > 0) {
       Entity commentEntity = new Entity("Comment");
       commentEntity.setProperty("text", text);
+      commentEntity.setProperty("name", name);
       commentEntity.setProperty("timestamp", timestamp);
       datastore.put(commentEntity);
     }

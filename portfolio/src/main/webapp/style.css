@@ -39,7 +39,7 @@ h1, h2, h3, h4, h5, h6, p {
   color: var(--text-color);
 }
 
-input {
+input, textarea, select {
   margin-top: 5px;
   margin-bottom: 5px;
   height: 24px;
@@ -52,18 +52,28 @@ input[type=button], input[type=submit] {
   height: 30px;
 }
 
-input:hover {
+input:hover, textarea:hover, select:hover {
   border: 2px solid yellow;
 }
 
-input:focus {
+input:focus, textarea:focus, select:focus {
   border: 2px solid green;
   outline: none;
 }
 
-input:active {
+input:active, textarea:active, select:active {
   border: 2px solid blue;
   outline: none;
+}
+
+textarea {
+  width: 98%;
+  resize: vertical;
+  min-height: 50px;
+}
+
+select {
+  height: 30px;
 }
 
 a {
@@ -116,6 +126,11 @@ a:focus {
 
 .subsection:hover {
   background-color: rgba(10, 10, 10, .05);
+}
+
+.divider {
+  border-bottom: 1px solid blue;
+  margin: 5px;
 }
 
 .subtitle {
@@ -177,4 +192,22 @@ input[type=button].menu-button:hover {
 
 .left-space {
   margin-left: 35px;
+}
+
+.comment-div {
+  border: 1px solid var(--input-color);
+  border-radius: 15px;
+  margin: 10px;
+  padding: 8px;
+}
+
+.comment-div h4, .comment-div h6, .comment-div p {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: 0px;
+}
+
+.comment-div p {
+  border-top: 1px solid var(--input-color);
+  border-bottom: 1px solid var(--input-color);
 }
