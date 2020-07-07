@@ -39,9 +39,9 @@ public class DataServlet extends HttpServlet {
   private static final String DEFAULT_SORT = "time-newest";
 
   private static class Comment {
-    long timestamp;
-    String name;
-    String text;
+    private final long timestamp;
+    private final String name;
+    private final String text;
 
     public Comment(long timestamp, String name, String text) {
       this.timestamp = timestamp;
