@@ -144,6 +144,11 @@ function toggleTheme() {
   cssVars.setProperty('--menu-color', 'var(--' + newTheme + '-menu-color)');
 }
 
+/**
+ * Creates div filled with comment content
+ * @param {object} data
+ * @return {div}
+ */
 function createCommentDiv(data) {
   const div = document.createElement('div');
   div.className = 'comment-div';
@@ -179,7 +184,8 @@ function getComments() {
       .then(response => response.json())
       .then((comments => {
         console.debug(comments);
-        document.getElementById('page').max = (comments.length > 0) ? page + 1 : page;
+        document.getElementById('page').max =
+            (comments.length > 0) ? page + 1 : page;
         const commentsContainer = document.getElementById('comments-container');
         commentsContainer.innerText = '';
         for (let i in comments) {
@@ -216,21 +222,28 @@ function addComment() {
   });
 }
 
+/**
+ * Shows login link if not logged in and logout link if logged in
+ */
 function checkLoginStatus() {
   fetch('/login-status').then(response => response.json()).then((status => {
     console.log(status, status.email);
     if (status.loggedIn) {
-      document.getElementById("login-link").href = status.url;
-      document.getElementById("login-button").value = "Logout from " + status.email;
-      document.getElementById("add-comments").style.display = "block";
+      document.getElementById('login-link').href = status.url;
+      document.getElementById('login-button').value =
+          'Logout from ' + status.email;
+      document.getElementById('add-comments').style.display = 'block';
     } else {
-      document.getElementById("login-link").href = status.url;
-      document.getElementById("login-button").value = "Login";
-      document.getElementById("add-comments").style.display = "none";
+      document.getElementById('login-link').href = status.url;
+      document.getElementById('login-button').value = 'Login';
+      document.getElementById('add-comments').style.display = 'none';
     }
   }));
 }
 
+/**
+ * Gets comments and login status when page is loaded
+ */
 function pageLoad() {
   getComments();
   checkLoginStatus();
