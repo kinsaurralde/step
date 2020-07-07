@@ -148,7 +148,11 @@ function createCommentDiv(data) {
   const div = document.createElement('div');
   div.className = 'comment-div';
   const name = document.createElement('h4');
-  name.textContent = data['name'] + ' (' + data['email'] + ')';
+  if (data['hideEmail']) {
+    name.textContent = data['name'];
+  } else {
+    name.textContent = data['email'];
+  }
   const text = document.createElement('p');
   text.textContent = data['text'];
   const timestamp = document.createElement('h6');
@@ -213,10 +217,10 @@ function addComment() {
 
 function checkLoginStatus() {
   fetch('/login-status').then(response => response.json()).then((status => {
-    console.log(status);
+    console.log(status, status.email);
     if (status.loggedIn) {
       document.getElementById("login-link").href = status.url;
-      document.getElementById("login-button").value = "Logout";
+      document.getElementById("login-button").value = "Logout from " + status.email;
       document.getElementById("add-comments").style.display = "block";
     } else {
       document.getElementById("login-link").href = status.url;

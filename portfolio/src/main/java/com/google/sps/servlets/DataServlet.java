@@ -43,15 +43,19 @@ public class DataServlet extends HttpServlet {
 
   private static class Comment {
     long timestamp;
-    String name;
-    String text;
-    String email;
+    String name = "";
+    String text = "";
+    String email = "";
+    boolean hideEmail;
 
     public Comment(Entity entity) {
+      this.hideEmail = (boolean) entity.getProperty("hide_email");
       this.timestamp = (long) entity.getProperty("timestamp");
       this.name = (String) entity.getProperty("name");
       this.text = (String) entity.getProperty("text");
-      this.email = (String) entity.getProperty("email");
+      if (!this.hideEmail) {
+        this.email = (String) entity.getProperty("email");
+      }
     }
   }
 
@@ -86,12 +90,14 @@ public class DataServlet extends HttpServlet {
     long timestamp = System.currentTimeMillis();
     String text = getRequestParameterOrDefault(request, "comment-text", "");
     String name = getRequestParameterOrDefault(request, "comment-name", "");
+    boolean hideEmail = (name.length() > 0) ? true : false;
     if (text.length() > 0 && userService.isUserLoggedIn()) {
       Entity commentEntity = new Entity("Comment");
       commentEntity.setProperty("text", text);
       commentEntity.setProperty("name", name);
       commentEntity.setProperty("timestamp", timestamp);
       commentEntity.setProperty("email", userService.getCurrentUser().getEmail());
+      commentEntity.setProperty("hide_email", hideEmail);
       datastore.put(commentEntity);
     }
     response.sendRedirect("/#comments");

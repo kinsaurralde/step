@@ -30,12 +30,14 @@ public class LoginServlet extends HttpServlet {
   private static class LoginStatus {
     boolean loggedIn;
     String url;
+    String email;
 
     public LoginStatus() {
       UserService userService = UserServiceFactory.getUserService();
       this.loggedIn = userService.isUserLoggedIn();
       if (this.loggedIn) {
         this.url = userService.createLogoutURL("/#comments");
+        this.email = userService.getCurrentUser().getEmail();
       } else {
         this.url = userService.createLoginURL("/#comments");
       }
