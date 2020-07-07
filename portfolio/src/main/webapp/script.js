@@ -179,6 +179,7 @@ function getComments() {
       .then(response => response.json())
       .then((comments => {
         console.debug(comments);
+        document.getElementById('page').max = (comments.length > 0) ? page + 1 : page;
         const commentsContainer = document.getElementById('comments-container');
         commentsContainer.innerText = '';
         for (let i in comments) {
