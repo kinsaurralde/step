@@ -208,13 +208,12 @@ function deleteComments() {
  * Send new comment to server to add
  */
 function addComment() {
+  let formData = new FormData();
+  formData.append("comment-text", document.getElementById('comment-text').value);
+  formData.append("comment-name", document.getElementById('comment-name').value);
   const request = new Request('/data', {
     method: 'POST',
-    headers: new Headers({'content-type': 'application/x-www-form-urlencoded'}),
-    body: 'comment-text=' +
-        encodeURIComponent(document.getElementById('comment-text').value) +
-        '&comment-name=' +
-        encodeURIComponent(document.getElementById('comment-name').value)
+    body: formData
   });
   document.getElementById('comment-text').value = '';
   fetch(request).then(function() {
