@@ -208,17 +208,37 @@ function deleteComments() {
  * Send new comment to server to add
  */
 function addComment() {
-  let formData = new FormData();
-  formData.append("comment-text", document.getElementById('comment-text').value);
-  formData.append("comment-name", document.getElementById('comment-name').value);
-  const request = new Request('/data', {
-    method: 'POST',
-    body: formData
-  });
-  document.getElementById('comment-text').value = '';
-  fetch(request).then(function() {
-    getComments();
-  });
+  //document.getElementById('image-upload').submit();
+  fetch('/blobstore').then((response) => {
+      return response.text();
+    }).then((imageUploadUrl) => {
+      // const imageForm = document.getElementById('image-upload');
+      // imageForm.action = imageUploadUrl;
+      let fileData = new FormData();
+      fileData.append("image", document.getElementById('comment-image').files[0]);
+      console.log(imageUploadUrl);
+      const fileUploadRequest = new Request(imageUploadUrl, {
+        method: 'POST',
+        body: fileData
+      });
+      fetch(fileUploadRequest).then((response) => {
+        return response.text();
+      }).then((imageUrl) => {
+        let formData = new FormData();
+        formData.append("comment-text", document.getElementById('comment-text').value);
+        formData.append("comment-name", document.getElementById('comment-name').value);
+        formData.append("comment-image-url", imageUrl);
+        console.log(imageUrl);
+        const request = new Request('/data', {
+          method: 'POST',
+          body: formData
+        });
+        document.getElementById('comment-text').value = '';
+        fetch(request).then(function() {
+          getComments();
+        });
+      })
+    });  
 }
 
 /**
@@ -240,10 +260,20 @@ function checkLoginStatus() {
   }));
 }
 
+function getFileUploadURL() {
+  fetch('/blobstore-upload-url').then((response) => {
+      return response.text();
+    }).then((imageUploadUrl) => {
+      const imageForm = document.getElementById('image-upload');
+      imageForm.action = imageUploadUrl;
+    });
+}
+
 /**
  * Gets comments and login status when page is loaded
  */
 function pageLoad() {
   getComments();
+  //getFileUploadURL();
   checkLoginStatus();
 }

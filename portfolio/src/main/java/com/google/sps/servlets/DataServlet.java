@@ -91,6 +91,7 @@ public class DataServlet extends HttpServlet {
     long timestamp = System.currentTimeMillis();
     String text = getRequestParameterOrDefault(request, "comment-text", "");
     String name = getRequestParameterOrDefault(request, "comment-name", "");
+    String imageUrl = getRequestParameterOrDefault(request, "comment-image-url", "");
     boolean hideEmail = (name.length() > 0) ? true : false;
     if (text.length() > 0 && userService.isUserLoggedIn()) {
       Entity commentEntity = new Entity("Comment");
@@ -99,6 +100,7 @@ public class DataServlet extends HttpServlet {
       commentEntity.setProperty("timestamp", timestamp);
       commentEntity.setProperty("email", userService.getCurrentUser().getEmail());
       commentEntity.setProperty("hide_email", hideEmail);
+      commentEntity.setProperty("image_url", imageUrl);
       datastore.put(commentEntity);
     }
     response.sendRedirect("/#comments");
