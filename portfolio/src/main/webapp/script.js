@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -144,11 +144,20 @@ function toggleTheme() {
   cssVars.setProperty('--menu-color', 'var(--' + newTheme + '-menu-color)');
 }
 
+/**
+ * Creates div filled with comment content
+ * @param {object} data
+ * @return {div}
+ */
 function createCommentDiv(data) {
   const div = document.createElement('div');
   div.className = 'comment-div';
   const name = document.createElement('h4');
-  name.textContent = data['name'];
+  if (data['hideEmail']) {
+    name.textContent = data['name'];
+  } else {
+    name.textContent = data['email'];
+  }
   const text = document.createElement('p');
   text.textContent = data['text'];
   const timestamp = document.createElement('h6');
@@ -175,6 +184,8 @@ function getComments() {
       .then(response => response.json())
       .then((comments => {
         console.debug(comments);
+        document.getElementById('page').max =
+            (comments.length > 0) ? page + 1 : page;
         const commentsContainer = document.getElementById('comments-container');
         commentsContainer.innerText = '';
         for (let i in comments) {
@@ -209,4 +220,31 @@ function addComment() {
   fetch(request).then(function() {
     getComments();
   });
+}
+
+/**
+ * Shows login link if not logged in and logout link if logged in
+ */
+function checkLoginStatus() {
+  fetch('/login-status').then(response => response.json()).then((status => {
+    console.log(status, status.email);
+    if (status.loggedIn) {
+      document.getElementById('login-link').href = status.url;
+      document.getElementById('login-button').value =
+          'Logout from ' + status.email;
+      document.getElementById('add-comments').style.display = 'block';
+    } else {
+      document.getElementById('login-link').href = status.url;
+      document.getElementById('login-button').value = 'Login';
+      document.getElementById('add-comments').style.display = 'none';
+    }
+  }));
+}
+
+/**
+ * Gets comments and login status when page is loaded
+ */
+function pageLoad() {
+  getComments();
+  checkLoginStatus();
 }

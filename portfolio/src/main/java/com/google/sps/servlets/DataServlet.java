@@ -21,6 +21,8 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,19 +36,26 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private final UserService userService = UserServiceFactory.getUserService();
   private static final String DEFAULT_COMMENTS_COUNT = "5";
   private static final String DEFAULT_PAGE = "1";
   private static final String DEFAULT_SORT = "time-newest";
 
   private static class Comment {
     private final long timestamp;
-    private final String name;
-    private final String text;
+    private String name = "";
+    private String text = "";
+    private String email = "";
+    private final boolean hideEmail;
 
-    public Comment(long timestamp, String name, String text) {
-      this.timestamp = timestamp;
-      this.name = name;
-      this.text = text;
+    public Comment(Entity entity) {
+      this.hideEmail = (boolean) entity.getProperty("hide_email");
+      this.timestamp = (long) entity.getProperty("timestamp");
+      this.name = (String) entity.getProperty("name");
+      this.text = (String) entity.getProperty("text");
+      if (!this.hideEmail) {
+        this.email = (String) entity.getProperty("email");
+      }
     }
   }
 
@@ -69,8 +78,7 @@ public class DataServlet extends HttpServlet {
         FetchOptions.Builder.withLimit(numComments).offset(numComments * (page - 1)));
     ArrayList<Comment> comments = new ArrayList<Comment>();
     for (Entity entity : results) {
-      comments.add(new Comment((long) entity.getProperty("timestamp"),
-          (String) entity.getProperty("name"), (String) entity.getProperty("text")));
+      comments.add(new Comment(entity));
     }
     Gson gson = new Gson();
     String json = gson.toJson(comments);
@@ -82,11 +90,14 @@ public class DataServlet extends HttpServlet {
     long timestamp = System.currentTimeMillis();
     String text = getRequestParameterOrDefault(request, "comment-text", "");
     String name = getRequestParameterOrDefault(request, "comment-name", "");
-    if (text.length() > 0) {
+    boolean hideEmail = (name.length() > 0) ? true : false;
+    if (text.length() > 0 && userService.isUserLoggedIn()) {
       Entity commentEntity = new Entity("Comment");
       commentEntity.setProperty("text", text);
       commentEntity.setProperty("name", name);
       commentEntity.setProperty("timestamp", timestamp);
+      commentEntity.setProperty("email", userService.getCurrentUser().getEmail());
+      commentEntity.setProperty("hide_email", hideEmail);
       datastore.put(commentEntity);
     }
     response.sendRedirect("/#comments");
