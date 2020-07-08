@@ -18,19 +18,18 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/** Servlet that return login status and current email */
 @WebServlet("/login-status")
 public class LoginServlet extends HttpServlet {
   private static class LoginStatus {
-    boolean loggedIn;
-    String url;
-    String email;
+    private final boolean loggedIn;
+    private String url = "";
+    private String email = "";
 
     public LoginStatus() {
       UserService userService = UserServiceFactory.getUserService();
