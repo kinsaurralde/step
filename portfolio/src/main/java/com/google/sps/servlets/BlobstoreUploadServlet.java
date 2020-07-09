@@ -1,4 +1,3 @@
-
 // Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,24 +33,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * On GET request, return url to upload image to
- * On POST request, upload image and return url where it is stored
+ * Handles image uploads
  */
 @WebServlet("/blobstore-upload")
 public class BlobstoreUploadServlet extends HttpServlet {
+  private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+  private static final String CONTENT_TYPE_TEXT = "text/html";
+  private static final String UPLOAD_URL = "/blobstore";
+
+  /** Returns url image should be uploaded to */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-    String uploadUrl = blobstoreService.createUploadUrl("/blobstore-upload");
-    System.out.println("GET " + uploadUrl);
-    response.setContentType("text/html");
+    String uploadUrl = blobstoreService.createUploadUrl(UPLOAD_URL);
+    response.setContentType(CONTENT_TYPE_TEXT);
     response.getWriter().println(uploadUrl);
     System.out.println(uploadUrl);
   }
 
+  /** Returns url where image is now stored */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+    // Get the URL of the image that the user uploaded to Blobstore.
+    //String imageUrl = getUploadedFileUrl(request, "image");
+    response.setContentType(CONTENT_TYPE_TEXT);
+
     Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
     List<BlobKey> blobKeys = blobs.get("image");
 
