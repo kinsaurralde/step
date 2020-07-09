@@ -158,13 +158,18 @@ function createCommentDiv(data) {
   } else {
     name.textContent = data['email'];
   }
+  div.appendChild(name);
   const text = document.createElement('p');
   text.textContent = data['text'];
+  div.appendChild(text);
+  if (data['imageUrl'] != 'null\n') {
+    const image = document.createElement('img');
+    image.src = data['imageUrl'];
+    div.appendChild(image);
+  }
   const timestamp = document.createElement('h6');
   const datetime = new Date(data['timestamp']);
   timestamp.textContent = datetime.toLocaleString('en-US');
-  div.appendChild(name);
-  div.appendChild(text);
   div.appendChild(timestamp);
   return div;
 }
@@ -205,21 +210,51 @@ function deleteComments() {
 }
 
 /**
+ * Sends comment data to server
+ * @param {String} imageUrl
+ */
+function sendForm(imageUrl) {
+  let formData = new FormData();
+  formData.append(
+      'comment-text', document.getElementById('comment-text').value);
+  formData.append(
+      'comment-name', document.getElementById('comment-name').value);
+  formData.append('comment-image-url', imageUrl);
+  const request = new Request('/data', {method: 'POST', body: formData});
+  document.getElementById('comment-text').value = '';
+  fetch(request).then(() => {getComments()});
+}
+
+/**
+ * Uploads image file to given url
+ * @param {String} imageUploadUrl
+ */
+function uploadPhoto(imageUploadUrl) {
+  console.debug(imageUploadUrl);
+  let fileData = new FormData();
+  fileData.append('image', document.getElementById('comment-image').files[0]);
+  const fileUploadRequest =
+      new Request(imageUploadUrl, {method: 'POST', body: fileData});
+  fetch(fileUploadRequest)
+      .then((response) => {
+        return response.text();
+      })
+      .then((imageUrl) => {
+        sendForm(imageUrl);
+      })
+}
+
+/**
  * Send new comment to server to add
  */
 function addComment() {
-  const request = new Request('/data', {
-    method: 'POST',
-    headers: new Headers({'content-type': 'application/x-www-form-urlencoded'}),
-    body: 'comment-text=' +
-        encodeURIComponent(document.getElementById('comment-text').value) +
-        '&comment-name=' +
-        encodeURIComponent(document.getElementById('comment-name').value)
-  });
-  document.getElementById('comment-text').value = '';
-  fetch(request).then(function() {
-    getComments();
-  });
+  fetch('/blobstore')
+      .then((response) => {
+        return response.text();
+      })
+      .then((imageUploadUrl) => {
+        uploadPhoto(imageUploadUrl);
+      });
 }
 
 /**
@@ -227,7 +262,7 @@ function addComment() {
  */
 function checkLoginStatus() {
   fetch('/login-status').then(response => response.json()).then((status => {
-    console.log(status, status.email);
+    console.debug(status, status.email);
     if (status.loggedIn) {
       document.getElementById('login-link').href = status.url;
       document.getElementById('login-button').value =

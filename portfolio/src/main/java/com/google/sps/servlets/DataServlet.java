@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that adds and returns comments */
+@javax.servlet.annotation.MultipartConfig
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -46,6 +47,7 @@ public class DataServlet extends HttpServlet {
     private String name = "";
     private String text = "";
     private String email = "";
+    private String imageUrl = "";
     private final boolean hideEmail;
 
     public Comment(Entity entity) {
@@ -53,6 +55,7 @@ public class DataServlet extends HttpServlet {
       this.timestamp = (long) entity.getProperty("timestamp");
       this.name = (String) entity.getProperty("name");
       this.text = (String) entity.getProperty("text");
+      this.imageUrl = (String) entity.getProperty("image_url");
       if (!this.hideEmail) {
         this.email = (String) entity.getProperty("email");
       }
@@ -90,6 +93,7 @@ public class DataServlet extends HttpServlet {
     long timestamp = System.currentTimeMillis();
     String text = getRequestParameterOrDefault(request, "comment-text", "");
     String name = getRequestParameterOrDefault(request, "comment-name", "");
+    String imageUrl = getRequestParameterOrDefault(request, "comment-image-url", "");
     boolean hideEmail = (name.length() > 0) ? true : false;
     if (text.length() > 0 && userService.isUserLoggedIn()) {
       Entity commentEntity = new Entity("Comment");
@@ -98,6 +102,7 @@ public class DataServlet extends HttpServlet {
       commentEntity.setProperty("timestamp", timestamp);
       commentEntity.setProperty("email", userService.getCurrentUser().getEmail());
       commentEntity.setProperty("hide_email", hideEmail);
+      commentEntity.setProperty("image_url", imageUrl);
       datastore.put(commentEntity);
     }
     response.sendRedirect("/#comments");
