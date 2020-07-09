@@ -47,10 +47,35 @@ let catPhotos = [
   {'filename': 'IMG_7812.JPG', 'subtitle': 'Looking at something', 'img': null},
   {'filename': 'IMG_6657.jpeg', 'subtitle': 'Christmas costume', 'img': null},
 ];
-const MAX_WIDTH = 800;
-const MAX_HEIGHT = 600;
 
 changeCatPhoto(0);
+
+/**
+ * Change image dimensions while keeping aspect ratio
+ * @param {Image} newImage
+ * @param {int} maxWidth
+ * @param {int} maxHeight
+ */
+function scaleImage(newImage, maxWidth, maxHeight) {
+  let width = newImage.width;
+  let height = newImage.height;
+  if (width / height > maxWidth /
+          maxHeight) { /* Set width to maxWidth and scale height */
+    let scaleFactor = maxWidth / width;
+    let newHeight = height * scaleFactor;
+    newImage.style.width = maxWidth + 'px';
+    newImage.style.height = newHeight + 'px';
+    newImage.style.marginTop =
+        ((maxHeight - newHeight) / 2) + 'px'; /* Center photo vertically */
+  } else { /* Set height to maxHeight and scale width */
+    let scaleFactor = maxHeight / height;
+    let newWidth = width * scaleFactor;
+    newImage.style.width = newWidth + 'px';
+    newImage.style.height = maxHeight + 'px';
+    newImage.style.marginLeft =
+        ((maxWidth - newWidth) / 2) + 'px'; /* Center photo horizontally */
+  }
+}
 
 /**
  * Switches image in cat gallery
@@ -60,24 +85,7 @@ function changeCatPhoto(num) {
   if (catPhotos[num]['img'] == null) { /* Photo only needs to be loaded once */
     let newImage = new Image();
     newImage.onload = function() {
-      let width = newImage.width;
-      let height = newImage.height;
-      if (width / height > MAX_WIDTH /
-              MAX_HEIGHT) { /* Set width to MAX_WIDTH and scale height */
-        let scaleFactor = MAX_WIDTH / width;
-        let newHeight = height * scaleFactor;
-        newImage.style.width = MAX_WIDTH + 'px';
-        newImage.style.height = newHeight + 'px';
-        newImage.style.marginTop =
-            ((MAX_HEIGHT - newHeight) / 2) + 'px'; /* Center photo vertically */
-      } else { /* Set height to MAX_HEIGHT and scale width */
-        let scaleFactor = MAX_HEIGHT / height;
-        let newWidth = width * scaleFactor;
-        newImage.style.width = newWidth + 'px';
-        newImage.style.height = MAX_HEIGHT + 'px';
-        newImage.style.marginLeft =
-            ((MAX_WIDTH - newWidth) / 2) + 'px'; /* Center photo horizontally */
-      }
+      scaleImage(newImage, 800, 600);
       newImage.alt = catPhotos[num]['subtitle'];
       catPhotos[num]['img'] = newImage;
       catGalleryImage.innerHTML = '';
@@ -162,10 +170,19 @@ function createCommentDiv(data) {
   const text = document.createElement('p');
   text.textContent = data['text'];
   div.appendChild(text);
-  if (data['imageUrl'] != 'null\n') {
-    const image = document.createElement('img');
-    image.src = data['imageUrl'];
-    div.appendChild(image);
+  if (data['imageUrl'] != "null\n") {
+    fetch('/blobstore-get?blob-key=' + data['imageUrl']).then((response) => {
+      console.debug(response);
+      let newImage = new Image();
+      newImage.onload = function() {
+        scaleImage(newImage, 400, 300);
+        newImage.alt = data['text'];
+        newImage.style.display = "block";
+      };
+      newImage.style.display = "none";
+      newImage.src = response['url'];
+      div.appendChild(newImage);
+    })
   }
   const timestamp = document.createElement('h6');
   const datetime = new Date(data['timestamp']);
@@ -230,7 +247,7 @@ function sendForm(imageUrl) {
  * @param {String} imageUploadUrl
  */
 function uploadPhoto(imageUploadUrl) {
-  console.debug(imageUploadUrl);
+  console.debug("imageUploadUrl", imageUploadUrl);
   let fileData = new FormData();
   fileData.append('image', document.getElementById('comment-image').files[0]);
   const fileUploadRequest =
@@ -240,6 +257,7 @@ function uploadPhoto(imageUploadUrl) {
         return response.text();
       })
       .then((imageUrl) => {
+        console.debug("imageUrl", imageUrl);
         sendForm(imageUrl);
       })
 }
@@ -248,7 +266,7 @@ function uploadPhoto(imageUploadUrl) {
  * Send new comment to server to add
  */
 function addComment() {
-  fetch('/blobstore')
+  fetch('/blobstore-upload')
       .then((response) => {
         return response.text();
       })
