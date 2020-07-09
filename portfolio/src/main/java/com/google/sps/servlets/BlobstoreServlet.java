@@ -42,7 +42,7 @@ public class BlobstoreServlet extends HttpServlet {
   private static final String CONTENT_TYPE_TEXT = "text/html";
   private static final String UPLOAD_URL = "/blobstore";
 
-  /** Return url image should be uploaded to */
+  /** Returns url image should be uploaded to */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String uploadUrl = blobstoreService.createUploadUrl(UPLOAD_URL);
@@ -50,7 +50,7 @@ public class BlobstoreServlet extends HttpServlet {
     response.getWriter().println(uploadUrl);
   }
 
-  /** Return url where image is now stored */
+  /** Returns url where image is now stored */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the URL of the image that the user uploaded to Blobstore.
@@ -79,8 +79,6 @@ public class BlobstoreServlet extends HttpServlet {
       return null;
     }
 
-    // Use ImagesService to get a URL that points to the uploaded file.
-    
     ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
 
     // To support running in Google Cloud Shell with AppEngine's devserver, we must use the relative
