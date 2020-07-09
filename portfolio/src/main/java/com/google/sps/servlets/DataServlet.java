@@ -47,6 +47,7 @@ public class DataServlet extends HttpServlet {
     private String name = "";
     private String text = "";
     private String email = "";
+    private String imageUrl = "";
     private final boolean hideEmail;
 
     public Comment(Entity entity) {
@@ -54,6 +55,7 @@ public class DataServlet extends HttpServlet {
       this.timestamp = (long) entity.getProperty("timestamp");
       this.name = (String) entity.getProperty("name");
       this.text = (String) entity.getProperty("text");
+      this.imageUrl = (String) entity.getProperty("image_url");
       if (!this.hideEmail) {
         this.email = (String) entity.getProperty("email");
       }

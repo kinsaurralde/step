@@ -158,13 +158,18 @@ function createCommentDiv(data) {
   } else {
     name.textContent = data['email'];
   }
+  div.appendChild(name);
   const text = document.createElement('p');
   text.textContent = data['text'];
+   div.appendChild(text);
+  if (data['imageUrl'] != undefined) {
+    const image = document.createElement('img');
+    image.src = data['imageUrl'];
+    div.appendChild(image);
+  }
   const timestamp = document.createElement('h6');
   const datetime = new Date(data['timestamp']);
   timestamp.textContent = datetime.toLocaleString('en-US');
-  div.appendChild(name);
-  div.appendChild(text);
   div.appendChild(timestamp);
   return div;
 }

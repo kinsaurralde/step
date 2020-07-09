@@ -211,3 +211,7 @@ input[type=button].menu-button:hover {
   border-top: 1px solid var(--input-color);
   border-bottom: 1px solid var(--input-color);
 }
+
+.comment-div h6 {
+  border-top: 1px solid var(--input-color);
+}
