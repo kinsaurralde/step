@@ -162,7 +162,7 @@ function createCommentDiv(data) {
   const text = document.createElement('p');
   text.textContent = data['text'];
    div.appendChild(text);
-  if (data['imageUrl'] != undefined) {
+  if (data['imageUrl'] != "null\n") {
     const image = document.createElement('img');
     image.src = data['imageUrl'];
     div.appendChild(image);
