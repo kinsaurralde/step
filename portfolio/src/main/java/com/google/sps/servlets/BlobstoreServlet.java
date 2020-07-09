@@ -1,4 +1,3 @@
-
 // Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,31 +33,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * On GET request, return url to upload image to
- * On POST request, upload image and return url where it is stored
+ * Handles image uploads
  */
 @WebServlet("/blobstore")
 public class BlobstoreServlet extends HttpServlet {
+  private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+  private final ImagesService imagesService = ImagesServiceFactory.getImagesService();
+  private static final String CONTENT_TYPE_TEXT = "text/html";
+  private static final String UPLOAD_URL = "/blobstore";
+
+  /** Return url image should be uploaded to */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-    String uploadUrl = blobstoreService.createUploadUrl("/blobstore");
-    System.out.println("GET " + uploadUrl);
-    response.setContentType("text/html");
+    String uploadUrl = blobstoreService.createUploadUrl(UPLOAD_URL);
+    response.setContentType(CONTENT_TYPE_TEXT);
     response.getWriter().println(uploadUrl);
   }
 
+  /** Return url where image is now stored */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the URL of the image that the user uploaded to Blobstore.
     String imageUrl = getUploadedFileUrl(request, "image");
-    response.setContentType("text/html");
+    response.setContentType(CONTENT_TYPE_TEXT);
     response.getWriter().println(imageUrl);
   }
 
   /** Returns a URL that points to the uploaded file, or null if the user didn't upload a file. */
   private String getUploadedFileUrl(HttpServletRequest request, String formInputElementName) {
-    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
     Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
     List<BlobKey> blobKeys = blobs.get(formInputElementName);
 
@@ -77,11 +79,8 @@ public class BlobstoreServlet extends HttpServlet {
       return null;
     }
 
-    // We could check the validity of the file here, e.g. to make sure it's an image file
-    // https://stackoverflow.com/q/10779564/873165
-
     // Use ImagesService to get a URL that points to the uploaded file.
-    ImagesService imagesService = ImagesServiceFactory.getImagesService();
+    
     ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
 
     // To support running in Google Cloud Shell with AppEngine's devserver, we must use the relative
