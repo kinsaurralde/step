@@ -170,8 +170,8 @@ function createCommentDiv(data) {
   const text = document.createElement('p');
   text.textContent = data['text'];
   div.appendChild(text);
-  if (data['imageUrl'].length > 0 && data['imageUrl'] != 'null\n') {
-    fetch('/blobstore-get?blob-key=' + data['imageUrl']).then((response) => {
+  if (data['imageKey'].length > 0 && data['imageKey'] != 'null\n') {
+    fetch('/blobstore-get?blob-key=' + data['imageKey']).then((response) => {
       console.debug(response);
       let newImage = new Image();
       newImage.onload = function() {
@@ -231,15 +231,15 @@ function deleteComments() {
 
 /**
  * Sends comment data to server
- * @param {String} imageUrl
+ * @param {String} imageKey
  */
-function sendForm(imageUrl) {
+function sendForm(imageKey) {
   let formData = new FormData();
   formData.append(
       'comment-text', document.getElementById('comment-text').value);
   formData.append(
       'comment-name', document.getElementById('comment-name').value);
-  formData.append('comment-image-url', imageUrl);
+  formData.append('comment-image-key', imageKey);
   const request = new Request('/data', {method: 'POST', body: formData});
   document.getElementById('comment-text').value = '';
   fetch(request).then(() => {getComments()});
@@ -259,9 +259,9 @@ function uploadPhoto(imageUploadUrl) {
       .then((response) => {
         return response.text();
       })
-      .then((imageUrl) => {
-        console.debug('imageUrl', imageUrl);
-        sendForm(imageUrl);
+      .then((imageKey) => {
+        console.debug('imageKey', imageKey);
+        sendForm(imageKey);
       })
 }
 
