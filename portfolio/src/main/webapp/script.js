@@ -59,8 +59,8 @@ changeCatPhoto(0);
 function scaleImage(newImage, maxWidth, maxHeight) {
   let width = newImage.width;
   let height = newImage.height;
-  if (width / height > maxWidth /
-          maxHeight) { /* Set width to maxWidth and scale height */
+  if (width / height >
+      maxWidth / maxHeight) { /* Set width to maxWidth and scale height */
     let scaleFactor = maxWidth / width;
     let newHeight = height * scaleFactor;
     newImage.style.width = maxWidth + 'px';
@@ -177,9 +177,9 @@ function createCommentDiv(data) {
       newImage.onload = function() {
         scaleImage(newImage, 400, 300);
         newImage.alt = data['text'];
-        newImage.style.display = "block";
+        newImage.style.display = 'block';
       };
-      newImage.style.display = "none";
+      newImage.style.display = 'none';
       newImage.src = response['url'];
       div.appendChild(newImage);
     })
@@ -247,7 +247,7 @@ function sendForm(imageUrl) {
  * @param {String} imageUploadUrl
  */
 function uploadPhoto(imageUploadUrl) {
-  console.debug("imageUploadUrl", imageUploadUrl);
+  console.debug('imageUploadUrl', imageUploadUrl);
   let fileData = new FormData();
   fileData.append('image', document.getElementById('comment-image').files[0]);
   const fileUploadRequest =
@@ -257,7 +257,7 @@ function uploadPhoto(imageUploadUrl) {
         return response.text();
       })
       .then((imageUrl) => {
-        console.debug("imageUrl", imageUrl);
+        console.debug('imageUrl', imageUrl);
         sendForm(imageUrl);
       })
 }

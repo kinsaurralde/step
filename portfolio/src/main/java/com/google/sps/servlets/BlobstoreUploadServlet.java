@@ -39,7 +39,8 @@ import javax.servlet.http.HttpServletResponse;
 public class BlobstoreUploadServlet extends HttpServlet {
   private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
   private static final String CONTENT_TYPE_TEXT = "text/html";
-  private static final String UPLOAD_URL = "/blobstore";
+  private static final String UPLOAD_URL = "/blobstore-upload";
+  private static final String NO_BLOB_KEY = "null";
 
   /** Returns url image should be uploaded to */
   @Override
@@ -50,21 +51,17 @@ public class BlobstoreUploadServlet extends HttpServlet {
     System.out.println(uploadUrl);
   }
 
-  /** Returns url where image is now stored */
+  /** Returns blobKey of stored image */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the URL of the image that the user uploaded to Blobstore.
-    //String imageUrl = getUploadedFileUrl(request, "image");
     response.setContentType(CONTENT_TYPE_TEXT);
 
     Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
     List<BlobKey> blobKeys = blobs.get("image");
 
-    response.setContentType("text/html");
-
     // User submitted form without selecting a file, so we can't get a blobKey (dev server)
     if (blobKeys == null || blobKeys.isEmpty()) {
-      response.getWriter().println("null");
+      response.getWriter().println(NO_BLOB_KEY);
       return;
     }
 
@@ -74,7 +71,7 @@ public class BlobstoreUploadServlet extends HttpServlet {
     // User submitted form without selecting a file, so we can't get a blobKey (live server)
     BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
     if (blobInfo.getSize() == 0) {
-      response.getWriter().println("null");
+      response.getWriter().println(NO_BLOB_KEY);
       return;
     }
 
