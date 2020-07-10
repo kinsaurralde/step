@@ -170,7 +170,7 @@ function createCommentDiv(data) {
   const text = document.createElement('p');
   text.textContent = data['text'];
   div.appendChild(text);
-  if (data['imageUrl'] != "null\n") {
+  if (data['imageUrl'].length > 0 && data['imageUrl'] != 'null\n') {
     fetch('/blobstore-get?blob-key=' + data['imageUrl']).then((response) => {
       console.debug(response);
       let newImage = new Image();
@@ -198,6 +198,9 @@ function getComments() {
   const numComments = document.getElementById('num-comments').value;
   const page = document.getElementById('page').value;
   const sort = document.getElementById('comment-sort').value;
+  if (numComments === '' || page === '' || sort === '') {
+    return;
+  }
   const queryString =
       'num-comments=' + numComments + '&page=' + page + '&sort=' + sort;
   fetch(
