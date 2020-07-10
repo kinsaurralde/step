@@ -49,6 +49,7 @@ public class DataServlet extends HttpServlet {
     private String text = "";
     private String email = "";
     private String imageKey = "";
+    private String imageLabels = "";
     private final boolean hideEmail;
 
     public Comment(Entity entity) {
@@ -57,6 +58,7 @@ public class DataServlet extends HttpServlet {
       this.name = (String) entity.getProperty("name");
       this.text = (String) entity.getProperty("text");
       this.imageKey = (String) entity.getProperty("image_key");
+      this.imageLabels = (String) entity.getProperty("image_labels");
       if (!this.hideEmail) {
         this.email = (String) entity.getProperty("email");
       }
@@ -95,6 +97,7 @@ public class DataServlet extends HttpServlet {
     String text = getRequestParameterOrDefault(request, "comment-text", "");
     String name = getRequestParameterOrDefault(request, "comment-name", "");
     String imageKey = getRequestParameterOrDefault(request, "comment-image-key", "");
+    String imageLabels = getRequestParameterOrDefault(request, "comment-image-labels", "");
     boolean hideEmail = (name.length() > 0) ? true : false;
     if (text.length() > 0 && userService.isUserLoggedIn()) {
       Entity commentEntity = new Entity("Comment");
@@ -104,6 +107,7 @@ public class DataServlet extends HttpServlet {
       commentEntity.setProperty("email", userService.getCurrentUser().getEmail());
       commentEntity.setProperty("hide_email", hideEmail);
       commentEntity.setProperty("image_key", imageKey);
+      commentEntity.setProperty("image_labels", imageLabels);
       datastore.put(commentEntity);
     }
     response.sendRedirect("/#comments");
