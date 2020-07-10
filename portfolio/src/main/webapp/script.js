@@ -257,11 +257,11 @@ function uploadPhoto(imageUploadUrl) {
       new Request(imageUploadUrl, {method: 'POST', body: fileData});
   fetch(fileUploadRequest)
       .then((response) => {
-        return response.text();
+        return response.json();
       })
-      .then((imageKey) => {
-        console.debug('imageKey', imageKey);
-        sendForm(imageKey);
+      .then((responseData) => {
+        console.debug('fileData', responseData['imageKey'], responseData['imageLabels']);
+        sendForm(responseData['imageKey']);
       })
 }
 
