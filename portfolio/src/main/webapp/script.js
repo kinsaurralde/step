@@ -173,6 +173,13 @@ function createCommentDiv(data) {
   const image = document.createElement('div');
   if (data['imageKey'].length > 0 && data['imageKey'] != 'null\n') {
     div.appendChild(image);
+    const imageLabelsDiv = document.createElement('div');
+    const imageLabels = JSON.parse(data['imageLabels']);
+    imageLabelsDiv.innerText = "Hello: ";
+    for (let i = 0; i < imageLabels.length; i++) {
+      imageLabelsDiv.textContent += imageLabels[i]["description_"] + ': ' + imageLabels[i]["score_"];
+    }
+    div.appendChild(imageLabelsDiv);
     fetch('/blobstore-get?blob-key=' + data['imageKey']).then((response) => {
       console.debug(response);
       let newImage = new Image();

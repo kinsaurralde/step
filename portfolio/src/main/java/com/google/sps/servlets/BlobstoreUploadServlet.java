@@ -60,7 +60,7 @@ import com.google.cloud.vision.v1.ImageAnnotatorClient;
 @WebServlet("/blobstore-upload")
 public class BlobstoreUploadServlet extends HttpServlet {
   private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-  private static final String sampleJson = "[{'description_': 'Cat', 'score_': 0.99284726,}, {'description_': 'Small to medium-sized cats', 'score_': 0.9689183,}, {'description_': 'Whiskers', 'score_': 0.9066983,}]";
+  private static final String sampleJson = "[{\"description_\": \"Cat\", \"score_\": 0.99284726}, {\"description_\": \"Small to medium-sized cats\", \"score_\": 0.9689183}, {\"description_\": \"Whiskers\", \"score_\": 0.9066983}]";
   private static final String CONTENT_TYPE_TEXT = "text/html";
   private static final String CONTENT_TYPE_JSON = "application/json";
   private static final String UPLOAD_URL = "/blobstore-upload";
@@ -120,7 +120,11 @@ public class BlobstoreUploadServlet extends HttpServlet {
       imageLabelsJson = sampleJson;
     }
 
+    System.out.println(imageLabelsJson);
+
     BlobResponse blobResponse = new BlobResponse(blobKey.getKeyString(), imageLabelsJson);
+
+    System.out.println(gson.toJson(blobResponse));
 
     response.getWriter().println(gson.toJson(blobResponse));
   }
