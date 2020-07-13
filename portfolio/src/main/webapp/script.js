@@ -248,8 +248,12 @@ function sendForm(imageUploadResponse) {
       'comment-text', document.getElementById('comment-text').value);
   formData.append(
       'comment-name', document.getElementById('comment-name').value);
-  formData.append('comment-image-key', imageUploadResponse['imageKey']);
-  formData.append('comment-image-labels', imageUploadResponse['imageLabels'])
+  if (imageUploadResponse && imageUploadResponse.hasOwnProperty('imageKey')) {
+    formData.append('comment-image-key', imageUploadResponse['imageKey']);
+  }
+  if (imageUploadResponse && imageUploadResponse.hasOwnProperty('imageLabels')) {
+    formData.append('comment-image-labels', imageUploadResponse['imageLabels']);
+  }
   const request = new Request('/data', {method: 'POST', body: formData});
   document.getElementById('comment-text').value = '';
   fetch(request).then(() => {getComments()});
@@ -270,7 +274,7 @@ function uploadPhoto(imageUploadUrl) {
         return response.json();
       })
       .then((imageUploadResponse) => {
-        console.debug('imageUploadResponse', imageUploadResponse, imageUploadResponse['imageLabels']);
+        console.debug('imageUploadResponse', imageUploadResponse);
         sendForm(imageUploadResponse);
       })
 }
