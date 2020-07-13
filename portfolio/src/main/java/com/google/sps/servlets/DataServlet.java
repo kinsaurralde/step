@@ -92,6 +92,7 @@ public class DataServlet extends HttpServlet {
     response.getWriter().println(json);
   }
 
+  /** Saves comment to datastore */
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long timestamp = System.currentTimeMillis();
     String text = getRequestParameterOrDefault(request, "comment-text", "");

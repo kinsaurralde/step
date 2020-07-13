@@ -43,9 +43,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Handles image uploads
- */
+/** Handles image uploads */
 @WebServlet("/blobstore-upload")
 public class BlobstoreUploadServlet extends HttpServlet {
   private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
@@ -101,13 +99,13 @@ public class BlobstoreUploadServlet extends HttpServlet {
 
     Gson gson = new Gson();
     String imageLabelsJson;
-    // Get the labels of the image that the user uploaded.
     byte[] blobBytes = getBlobBytes(blobKey);
+    // Get the labels of the image that the user uploaded.
     try {
-      List<EntityAnnotation> imageLabels = getImageLabels(blobBytes);
+      List<EntityAnnotation> imageLabels = getImageLabels(blobBytes); // live server
       imageLabelsJson = gson.toJson(imageLabels);
     } catch (Exception e) {
-      imageLabelsJson = sampleJson;
+      imageLabelsJson = sampleJson; // dev server
     }
 
     BlobResponse blobResponse = new BlobResponse(blobKey.getKeyString(), imageLabelsJson);
