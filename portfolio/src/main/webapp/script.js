@@ -171,14 +171,15 @@ function createCommentDiv(data) {
   text.textContent = data['text'];
   div.appendChild(text);
   const image = document.createElement('div');
-  image.style.display = "flex";
+  image.style.display = 'flex';
   if (data['imageKey'].length > 0 && data['imageKey'] != 'null\n') {
     div.appendChild(image);
     const imageLabelsDiv = document.createElement('ul');
     const imageLabels = JSON.parse(data['imageLabels']);
     for (let i = 0; i < imageLabels.length; i++) {
       let label = document.createElement('li');
-      label.textContent = imageLabels[i]["description_"] + ': ' + imageLabels[i]["score_"];
+      label.textContent =
+          imageLabels[i]['description_'] + ': ' + imageLabels[i]['score_'];
       imageLabelsDiv.appendChild(label);
     }
     image.appendChild(imageLabelsDiv);
@@ -253,7 +254,8 @@ function sendForm(imageUploadResponse) {
   if (imageUploadResponse && imageUploadResponse.hasOwnProperty('imageKey')) {
     formData.append('comment-image-key', imageUploadResponse['imageKey']);
   }
-  if (imageUploadResponse && imageUploadResponse.hasOwnProperty('imageLabels')) {
+  if (imageUploadResponse &&
+      imageUploadResponse.hasOwnProperty('imageLabels')) {
     formData.append('comment-image-labels', imageUploadResponse['imageLabels']);
   }
   const request = new Request('/data', {method: 'POST', body: formData});

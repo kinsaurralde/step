@@ -22,28 +22,6 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-import java.util.ArrayList;
-import com.google.protobuf.ByteString;
-import java.io.ByteArrayOutputStream;
-import java.util.Map;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-import java.util.ArrayList;
-import com.google.protobuf.ByteString;
-import java.io.ByteArrayOutputStream;
-import java.util.Map;
-
-import com.google.gson.Gson;
 import com.google.cloud.vision.v1.AnnotateImageRequest;
 import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
@@ -51,8 +29,19 @@ import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.Feature;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
-
-
+import com.google.gson.Gson;
+import com.google.protobuf.ByteString;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Handles image uploads
@@ -60,7 +49,8 @@ import com.google.cloud.vision.v1.ImageAnnotatorClient;
 @WebServlet("/blobstore-upload")
 public class BlobstoreUploadServlet extends HttpServlet {
   private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-  private static final String sampleJson = "[{\"description_\": \"Cat\", \"score_\": 0.99284726}, {\"description_\": \"Small to medium-sized cats\", \"score_\": 0.9689183}, {\"description_\": \"Whiskers\", \"score_\": 0.9066983}]";
+  private static final String sampleJson =
+      "[{\"description_\": \"Cat\", \"score_\": 0.99284726}, {\"description_\": \"Small to medium-sized cats\", \"score_\": 0.9689183}, {\"description_\": \"Whiskers\", \"score_\": 0.9066983}]";
   private static final String CONTENT_TYPE_TEXT = "text/html";
   private static final String CONTENT_TYPE_JSON = "application/json";
   private static final String UPLOAD_URL = "/blobstore-upload";
@@ -116,15 +106,15 @@ public class BlobstoreUploadServlet extends HttpServlet {
     try {
       List<EntityAnnotation> imageLabels = getImageLabels(blobBytes);
       imageLabelsJson = gson.toJson(imageLabels);
-    } catch(Exception e) {
+    } catch (Exception e) {
       imageLabelsJson = sampleJson;
     }
-    
+
     BlobResponse blobResponse = new BlobResponse(blobKey.getKeyString(), imageLabelsJson);
     response.getWriter().println(gson.toJson(blobResponse));
   }
 
-   /**
+  /**
    * Get the binary data stored at the blobKey parameter.
    */
   private byte[] getBlobBytes(BlobKey blobKey) throws IOException {
