@@ -23,6 +23,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.api.datastore.Text;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class DataServlet extends HttpServlet {
       this.name = (String) entity.getProperty("name");
       this.text = (String) entity.getProperty("text");
       this.imageKey = (String) entity.getProperty("image_key");
-      this.imageLabels = (String) entity.getProperty("image_labels");
+      this.imageLabels = ((Text) entity.getProperty("image_labels")).getValue();
       if (!this.hideEmail) {
         this.email = (String) entity.getProperty("email");
       }
@@ -97,7 +98,7 @@ public class DataServlet extends HttpServlet {
     String text = getRequestParameterOrDefault(request, "comment-text", "");
     String name = getRequestParameterOrDefault(request, "comment-name", "");
     String imageKey = getRequestParameterOrDefault(request, "comment-image-key", "");
-    String imageLabels = getRequestParameterOrDefault(request, "comment-image-labels", "");
+    Text imageLabels = new Text(getRequestParameterOrDefault(request, "comment-image-labels", ""));
     boolean hideEmail = (name.length() > 0) ? true : false;
     if (text.length() > 0 && userService.isUserLoggedIn()) {
       Entity commentEntity = new Entity("Comment");

@@ -171,15 +171,17 @@ function createCommentDiv(data) {
   text.textContent = data['text'];
   div.appendChild(text);
   const image = document.createElement('div');
+  image.style.display = "flex";
   if (data['imageKey'].length > 0 && data['imageKey'] != 'null\n') {
     div.appendChild(image);
-    const imageLabelsDiv = document.createElement('div');
+    const imageLabelsDiv = document.createElement('ul');
     const imageLabels = JSON.parse(data['imageLabels']);
-    imageLabelsDiv.innerText = "Hello: ";
     for (let i = 0; i < imageLabels.length; i++) {
-      imageLabelsDiv.textContent += imageLabels[i]["description_"] + ': ' + imageLabels[i]["score_"];
+      let label = document.createElement('li');
+      label.textContent = imageLabels[i]["description_"] + ': ' + imageLabels[i]["score_"];
+      imageLabelsDiv.appendChild(label);
     }
-    div.appendChild(imageLabelsDiv);
+    image.appendChild(imageLabelsDiv);
     fetch('/blobstore-get?blob-key=' + data['imageKey']).then((response) => {
       console.debug(response);
       let newImage = new Image();
@@ -190,7 +192,7 @@ function createCommentDiv(data) {
       };
       newImage.style.display = 'none';
       newImage.src = response['url'];
-      image.appendChild(newImage);
+      image.prepend(newImage);
     })
   }
   const timestamp = document.createElement('h6');

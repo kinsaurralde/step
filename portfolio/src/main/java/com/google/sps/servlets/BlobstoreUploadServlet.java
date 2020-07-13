@@ -119,13 +119,8 @@ public class BlobstoreUploadServlet extends HttpServlet {
     } catch(Exception e) {
       imageLabelsJson = sampleJson;
     }
-
-    System.out.println(imageLabelsJson);
-
+    
     BlobResponse blobResponse = new BlobResponse(blobKey.getKeyString(), imageLabelsJson);
-
-    System.out.println(gson.toJson(blobResponse));
-
     response.getWriter().println(gson.toJson(blobResponse));
   }
 
