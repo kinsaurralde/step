@@ -21,6 +21,7 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
@@ -48,6 +49,7 @@ public class DataServlet extends HttpServlet {
     private String text = "";
     private String email = "";
     private String imageKey = "";
+    private String imageLabels = "";
     private final boolean hideEmail;
 
     public Comment(Entity entity) {
@@ -56,6 +58,7 @@ public class DataServlet extends HttpServlet {
       this.name = (String) entity.getProperty("name");
       this.text = (String) entity.getProperty("text");
       this.imageKey = (String) entity.getProperty("image_key");
+      this.imageLabels = ((Text) entity.getProperty("image_labels")).getValue();
       if (!this.hideEmail) {
         this.email = (String) entity.getProperty("email");
       }
@@ -89,11 +92,13 @@ public class DataServlet extends HttpServlet {
     response.getWriter().println(json);
   }
 
+  /** Saves comment to datastore */
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long timestamp = System.currentTimeMillis();
     String text = getRequestParameterOrDefault(request, "comment-text", "");
     String name = getRequestParameterOrDefault(request, "comment-name", "");
     String imageKey = getRequestParameterOrDefault(request, "comment-image-key", "");
+    Text imageLabels = new Text(getRequestParameterOrDefault(request, "comment-image-labels", ""));
     boolean hideEmail = (name.length() > 0) ? true : false;
     if (text.length() > 0 && userService.isUserLoggedIn()) {
       Entity commentEntity = new Entity("Comment");
@@ -103,6 +108,7 @@ public class DataServlet extends HttpServlet {
       commentEntity.setProperty("email", userService.getCurrentUser().getEmail());
       commentEntity.setProperty("hide_email", hideEmail);
       commentEntity.setProperty("image_key", imageKey);
+      commentEntity.setProperty("image_labels", imageLabels);
       datastore.put(commentEntity);
     }
     response.sendRedirect("/#comments");

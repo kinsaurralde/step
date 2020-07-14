@@ -170,7 +170,19 @@ function createCommentDiv(data) {
   const text = document.createElement('p');
   text.textContent = data['text'];
   div.appendChild(text);
+  const image = document.createElement('div');
+  image.style.display = 'flex';
   if (data['imageKey'].length > 0 && data['imageKey'] != 'null\n') {
+    div.appendChild(image);
+    const imageLabelsDiv = document.createElement('ul');
+    const imageLabels = JSON.parse(data['imageLabels']);
+    for (let i = 0; i < imageLabels.length; i++) {
+      let label = document.createElement('li');
+      label.textContent =
+          imageLabels[i]['description_'] + ': ' + imageLabels[i]['score_'];
+      imageLabelsDiv.appendChild(label);
+    }
+    image.appendChild(imageLabelsDiv);
     fetch('/blobstore-get?blob-key=' + data['imageKey']).then((response) => {
       console.debug(response);
       let newImage = new Image();
@@ -181,7 +193,7 @@ function createCommentDiv(data) {
       };
       newImage.style.display = 'none';
       newImage.src = response['url'];
-      div.appendChild(newImage);
+      image.prepend(newImage);
     })
   }
   const timestamp = document.createElement('h6');
@@ -233,13 +245,19 @@ function deleteComments() {
  * Sends comment data to server
  * @param {String} imageKey
  */
-function sendForm(imageKey) {
+function sendForm(imageUploadResponse) {
   let formData = new FormData();
   formData.append(
       'comment-text', document.getElementById('comment-text').value);
   formData.append(
       'comment-name', document.getElementById('comment-name').value);
-  formData.append('comment-image-key', imageKey);
+  if (imageUploadResponse && imageUploadResponse.hasOwnProperty('imageKey')) {
+    formData.append('comment-image-key', imageUploadResponse['imageKey']);
+  }
+  if (imageUploadResponse &&
+      imageUploadResponse.hasOwnProperty('imageLabels')) {
+    formData.append('comment-image-labels', imageUploadResponse['imageLabels']);
+  }
   const request = new Request('/data', {method: 'POST', body: formData});
   document.getElementById('comment-text').value = '';
   fetch(request).then(() => {getComments()});
@@ -257,11 +275,11 @@ function uploadPhoto(imageUploadUrl) {
       new Request(imageUploadUrl, {method: 'POST', body: fileData});
   fetch(fileUploadRequest)
       .then((response) => {
-        return response.text();
+        return response.json();
       })
-      .then((imageKey) => {
-        console.debug('imageKey', imageKey);
-        sendForm(imageKey);
+      .then((imageUploadResponse) => {
+        console.debug('imageUploadResponse', imageUploadResponse);
+        sendForm(imageUploadResponse);
       })
 }
 
