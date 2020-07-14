@@ -47,8 +47,10 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/blobstore-upload")
 public class BlobstoreUploadServlet extends HttpServlet {
   private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-  private static final String sampleJson =
-      "[{\"description_\": \"Cat\", \"score_\": 0.99284726}, {\"description_\": \"Small to medium-sized cats\", \"score_\": 0.9689183}, {\"description_\": \"Whiskers\", \"score_\": 0.9066983}]";
+  private static final String SAMPLE_JSON =
+      "[{\"description_\": \"Cat\", \"score_\": 0.99284726}," + 
+      "{\"description_\": \"Small to medium-sized cats\", \"score_\": 0.9689183}," +
+      "{\"description_\": \"Whiskers\", \"score_\": 0.9066983}]";
   private static final String CONTENT_TYPE_TEXT = "text/html";
   private static final String CONTENT_TYPE_JSON = "application/json";
   private static final String UPLOAD_URL = "/blobstore-upload";
@@ -105,7 +107,7 @@ public class BlobstoreUploadServlet extends HttpServlet {
       List<EntityAnnotation> imageLabels = getImageLabels(blobBytes); // live server
       imageLabelsJson = gson.toJson(imageLabels);
     } catch (Exception e) {
-      imageLabelsJson = sampleJson; // dev server
+      imageLabelsJson = SAMPLE_JSON; // dev server
     }
 
     BlobResponse blobResponse = new BlobResponse(blobKey.getKeyString(), imageLabelsJson);
