@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,13 +17,7 @@ package com.google.sps;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.ListIterator;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
@@ -31,81 +25,79 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> optionalTimes = new ArrayList<TimeRange>();
     ArrayList<String> attendees = new ArrayList<String>(request.getAttendees());
     ArrayList<String> optionalAttendees = new ArrayList<String>(request.getOptionalAttendees());
+    long duration = request.getDuration();
+
+    if (duration > TimeRange.WHOLE_DAY.duration()) {
+      return possibleTimes;
+    }
     possibleTimes.add(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TimeRange.END_OF_DAY, true));
     if (attendees.size() == 0 && optionalAttendees.size() == 0) {
       return possibleTimes;
     }
-    
-    long duration = request.getDuration();
-    if (duration > TimeRange.WHOLE_DAY.duration()) {
-      return new ArrayList<TimeRange>();
-    }
+
     boolean hasRequired = false;
     for (Event event : events) {
-      boolean validEvent = false;
-      boolean optionalOnly = false;
+      TimeRange eventTime = event.getWhen();
+      int requiredAttendeesCount = 0;
+      int optionalAttendeesCount = 0;
       for (String attendee : event.getAttendees()) {
         if (attendees.contains(attendee)) {
-          validEvent = true;
+          requiredAttendeesCount += 1;
           hasRequired = true;
-          break;
+        }
+        if (optionalAttendees.contains(attendee)) {
+          optionalAttendeesCount += 1;
         }
       }
-      if (!validEvent) {
-        for (String attendee : event.getAttendees()) {
-          if (optionalAttendees.contains(attendee)) {
-            validEvent = true;
-            optionalOnly = true;
-            break;
-          }
-        }
-      }
-      if (!validEvent) {
+      if (requiredAttendeesCount == 0 && optionalAttendeesCount == 0) {
         continue;
       }
-      TimeRange eventTime = event.getWhen();
-      Queue<TimeRange> timeCheck = new LinkedList<TimeRange>(possibleTimes);
-      while (timeCheck.peek() != null) {
-        TimeRange timeRange = timeCheck.remove();
-        if (timeRange.overlaps(eventTime)) {
-          if (optionalOnly) {
-            optionalTimes.add(eventTime);
-          } else {
-            addTime(possibleTimes, optionalTimes, timeRange, eventTime, duration, optionalOnly);
-          }
-        }
+      if (requiredAttendeesCount == 0 && optionalAttendeesCount > 0) {
+        optionalTimes.add(eventTime);
+        continue;
+      }    
+      for (ListIterator<TimeRange> iter = possibleTimes.listIterator(); iter.hasNext();) {
+        addTime(iter, eventTime, duration);
       }
     }
+    
     for (TimeRange optionalTime : optionalTimes) {
       if (sumAvailibleTime(possibleTimes) < optionalTime.duration() + duration && hasRequired) {
         continue;
       }
       for (ListIterator<TimeRange> iter = possibleTimes.listIterator(); iter.hasNext();) {
-        TimeRange timeRange = iter.next();
-        int timeRangeStart = timeRange.start();
-        int timeRangeEnd = timeRange.end();
-        int eventTimeStart = optionalTime.start();
-        int eventTimeEnd = optionalTime.end();
-        if (timeRange.contains(optionalTime)) {
-          iter.remove();
-          if (isTimeSlotValid(timeRangeStart, eventTimeStart, duration)) {
-            iter.add(TimeRange.fromStartEnd(timeRangeStart, eventTimeStart, false));
-          }
-          if (isTimeSlotValid(eventTimeEnd, timeRangeEnd, duration)) {
-            iter.add(TimeRange.fromStartEnd(eventTimeEnd, timeRangeEnd, false));
-          }
-        } else if (timeRange.overlaps(optionalTime)) {
-          if (timeRangeStart < eventTimeStart && timeRangeEnd < eventTimeEnd) {
-            iter.remove();
-            iter.add(TimeRange.fromStartEnd(timeRangeStart, eventTimeStart, false));
-          } else if (timeRangeStart > eventTimeStart && timeRangeEnd > eventTimeEnd) {
-            iter.remove();
-            iter.add(TimeRange.fromStartEnd(eventTimeEnd, timeRangeEnd, false));
-          }
-        }
+        addTime(iter, optionalTime, duration);
       }
     }
     return possibleTimes;
+  }
+
+  private void addTime(ListIterator<TimeRange> iter, TimeRange eventTime, long duration) {
+    TimeRange timeRange = iter.next();
+    int timeRangeStart = timeRange.start();
+    int timeRangeEnd = timeRange.end();
+    int eventTimeStart = eventTime.start();
+    int eventTimeEnd = eventTime.end();
+    if (timeRange.contains(eventTime)) {
+      iter.remove();
+      if (isTimeSlotValid(timeRangeStart, eventTimeStart, duration)) {
+        iter.add(TimeRange.fromStartEnd(timeRangeStart, eventTimeStart, false));
+      }
+      if (isTimeSlotValid(eventTimeEnd, timeRangeEnd, duration)) {
+        iter.add(TimeRange.fromStartEnd(eventTimeEnd, timeRangeEnd, false));
+      }
+    } else if (timeRange.overlaps(eventTime)) {
+      iter.remove();
+      if (timeRangeStart < eventTimeStart && timeRangeEnd < eventTimeEnd) {
+        if (isTimeSlotValid(timeRangeStart, eventTimeStart, duration)) {
+          iter.add(TimeRange.fromStartEnd(timeRangeStart, eventTimeStart, false));
+        }
+      } else if (timeRangeStart > eventTimeStart && timeRangeEnd > eventTimeEnd) {
+        if (isTimeSlotValid(eventTimeEnd, timeRangeEnd, duration)) {
+          iter.add(TimeRange.fromStartEnd(eventTimeEnd, timeRangeEnd, false));
+        }
+      }
+    }
   }
 
   private int sumAvailibleTime(ArrayList<TimeRange> times) {
@@ -121,53 +113,5 @@ public final class FindMeetingQuery {
       return false;
     }
     return (end - start) >= duration;
-  }
-
-  private void addTime(ArrayList<TimeRange> possibleTimes, ArrayList<TimeRange> optionalTimes, TimeRange timeRange, TimeRange eventTime, long duration, boolean optionalOnly) {
-    int timeRangeStart = timeRange.start();
-    int timeRangeEnd = timeRange.end();
-    int eventTimeStart = eventTime.start();
-    int eventTimeEnd = eventTime.end();
-    if (timeRange.equals(eventTime)) {
-      if (optionalOnly) {
-        optionalTimes.add(TimeRange.fromStartEnd(timeRangeStart, timeRangeEnd, false));
-      } else {
-        possibleTimes.add(TimeRange.fromStartEnd(timeRangeStart, timeRangeEnd, false));
-      }
-    } else if (timeRange.contains(eventTime)) { // possible time contains event time
-      if (isTimeSlotValid(timeRangeStart, eventTimeStart, duration)) {
-        if (optionalOnly) {
-          optionalTimes.add(TimeRange.fromStartEnd(timeRangeStart, eventTimeStart, false));
-        } else {
-          possibleTimes.add(TimeRange.fromStartEnd(timeRangeStart, eventTimeStart, false));
-        }
-      }
-      if (isTimeSlotValid(eventTimeEnd, timeRangeEnd, duration)) {
-        if (optionalOnly) {
-          optionalTimes.add(TimeRange.fromStartEnd(eventTimeEnd, timeRangeEnd, false));
-        } else {
-          possibleTimes.add(TimeRange.fromStartEnd(eventTimeEnd, timeRangeEnd, false));
-        }
-      }
-    } else if (timeRangeStart < eventTimeStart && timeRangeEnd < eventTimeEnd) {
-      if (isTimeSlotValid(timeRangeStart, eventTimeStart, duration)) {
-        if (optionalOnly) {
-          optionalTimes.add(TimeRange.fromStartEnd(timeRangeStart, eventTimeStart, false));
-        } else {
-          possibleTimes.add(TimeRange.fromStartEnd(timeRangeStart, eventTimeStart, false));
-        }
-      }
-    } else if (timeRangeStart > eventTimeStart && timeRangeEnd > eventTimeEnd) {
-      if (isTimeSlotValid(eventTimeEnd, timeRangeEnd, duration)) {
-        if (optionalOnly) {
-          optionalTimes.add(TimeRange.fromStartEnd(eventTimeEnd, timeRangeEnd, false));
-        } else {
-          possibleTimes.add(TimeRange.fromStartEnd(eventTimeEnd, timeRangeEnd, false));
-        }
-      }
-    }
-    if (!optionalOnly) {
-      possibleTimes.remove(timeRange);
-    }
   }
 }
