@@ -15,7 +15,6 @@
 package com.google.sps;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.ListIterator;
 
@@ -38,21 +37,21 @@ public final class FindMeetingQuery {
     boolean hasRequired = false;
     for (Event event : events) {
       TimeRange eventTime = event.getWhen();
-      int requiredAttendeesCount = 0;
-      int optionalAttendeesCount = 0;
+      boolean hasRequiredAttendees = false;
+      boolean hasOptionalAttendees = false;
       for (String attendee : event.getAttendees()) {
         if (attendees.contains(attendee)) {
-          requiredAttendeesCount += 1;
+          hasRequiredAttendees = true;
           hasRequired = true;
         }
         if (optionalAttendees.contains(attendee)) {
-          optionalAttendeesCount += 1;
+          hasOptionalAttendees = true;
         }
       }
-      if (requiredAttendeesCount == 0 && optionalAttendeesCount == 0) {
+      if (!hasRequiredAttendees && !hasOptionalAttendees) {
         continue;
       }
-      if (requiredAttendeesCount == 0 && optionalAttendeesCount > 0) {
+      if (!hasRequiredAttendees && hasOptionalAttendees) {
         optionalTimes.add(eventTime);
         continue;
       }
@@ -63,7 +62,7 @@ public final class FindMeetingQuery {
 
     for (TimeRange optionalTime : optionalTimes) {
       if (sumAvailibleTime(possibleTimes) < optionalTime.duration() + duration && hasRequired) {
-        continue;
+        continue; // no space for optional event since required meeting takes priority
       }
       for (ListIterator<TimeRange> iter = possibleTimes.listIterator(); iter.hasNext();) {
         addTime(iter, optionalTime, duration);
@@ -72,6 +71,10 @@ public final class FindMeetingQuery {
     return possibleTimes;
   }
 
+  /** 
+   *  Check if event overlaps or is contained by a possible meeting time
+   *  If it is, split possible meeting time to remove the time range of the event
+  */
   private void addTime(ListIterator<TimeRange> iter, TimeRange eventTime, long duration) {
     TimeRange timeRange = iter.next();
     int timeRangeStart = timeRange.start();
@@ -79,6 +82,9 @@ public final class FindMeetingQuery {
     int eventTimeStart = eventTime.start();
     int eventTimeEnd = eventTime.end();
     if (timeRange.contains(eventTime)) {
+      /* |---- meeting ----| becomes |-- meeting --||-- event --||-- meeting --|
+       *    |-- event --|
+      */ 
       iter.remove();
       if (isTimeSlotValid(timeRangeStart, eventTimeStart, duration)) {
         iter.add(TimeRange.fromStartEnd(timeRangeStart, eventTimeStart, false));
@@ -87,8 +93,11 @@ public final class FindMeetingQuery {
         iter.add(TimeRange.fromStartEnd(eventTimeEnd, timeRangeEnd, false));
       }
     } else if (timeRange.overlaps(eventTime)) {
+      /* |-- meeting --|       becomes |-- meeting --||-- event --|
+       *        |-- event --|
+      */
       iter.remove();
-      if (timeRangeStart < eventTimeStart && timeRangeEnd < eventTimeEnd) {
+      if (timeRangeStart < eventTimeStart && timeRangeEnd < eventTimeEnd) { 
         if (isTimeSlotValid(timeRangeStart, eventTimeStart, duration)) {
           iter.add(TimeRange.fromStartEnd(timeRangeStart, eventTimeStart, false));
         }
