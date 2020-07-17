@@ -55,12 +55,12 @@ public final class FindMeetingQuery {
       if (requiredAttendeesCount == 0 && optionalAttendeesCount > 0) {
         optionalTimes.add(eventTime);
         continue;
-      }    
+      }
       for (ListIterator<TimeRange> iter = possibleTimes.listIterator(); iter.hasNext();) {
         addTime(iter, eventTime, duration);
       }
     }
-    
+
     for (TimeRange optionalTime : optionalTimes) {
       if (sumAvailibleTime(possibleTimes) < optionalTime.duration() + duration && hasRequired) {
         continue;
