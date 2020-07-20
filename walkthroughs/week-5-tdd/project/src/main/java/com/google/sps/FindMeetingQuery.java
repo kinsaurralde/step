@@ -55,18 +55,14 @@ public final class FindMeetingQuery {
         optionalTimes.add(eventTime);
         continue;
       }
-      for (ListIterator<TimeRange> iter = possibleTimes.listIterator(); iter.hasNext();) {
-        addTime(iter, eventTime, duration);
-      }
+      addTime(possibleTimes, eventTime, duration);
     }
 
     for (TimeRange optionalTime : optionalTimes) {
-      if (sumAvailibleTime(possibleTimes) < optionalTime.duration() + duration && hasRequired) {
+      if (sumAvailableTime(possibleTimes) < optionalTime.duration() + duration && hasRequired) {
         continue; // no space for optional event since required meeting takes priority
       }
-      for (ListIterator<TimeRange> iter = possibleTimes.listIterator(); iter.hasNext();) {
-        addTime(iter, optionalTime, duration);
-      }
+      addTime(possibleTimes, optionalTime, duration);
     }
     return possibleTimes;
   }
@@ -75,41 +71,43 @@ public final class FindMeetingQuery {
    *  Check if event overlaps or is contained by a possible meeting time
    *  If it is, split possible meeting time to remove the time range of the event
   */
-  private void addTime(ListIterator<TimeRange> iter, TimeRange eventTime, long duration) {
-    TimeRange timeRange = iter.next();
-    int timeRangeStart = timeRange.start();
-    int timeRangeEnd = timeRange.end();
-    int eventTimeStart = eventTime.start();
-    int eventTimeEnd = eventTime.end();
-    if (timeRange.contains(eventTime)) {
-      /* |---- meeting ----| becomes |-- meeting --||-- event --||-- meeting --|
-       *    |-- event --|
-      */ 
-      iter.remove();
-      if (isTimeSlotValid(timeRangeStart, eventTimeStart, duration)) {
-        iter.add(TimeRange.fromStartEnd(timeRangeStart, eventTimeStart, false));
-      }
-      if (isTimeSlotValid(eventTimeEnd, timeRangeEnd, duration)) {
-        iter.add(TimeRange.fromStartEnd(eventTimeEnd, timeRangeEnd, false));
-      }
-    } else if (timeRange.overlaps(eventTime)) {
-      /* |-- meeting --|       becomes |-- meeting --||-- event --|
-       *        |-- event --|
-      */
-      iter.remove();
-      if (timeRangeStart < eventTimeStart && timeRangeEnd < eventTimeEnd) { 
+  private void addTime(ArrayList<TimeRange> times, TimeRange eventTime, long duration) {
+    for (ListIterator<TimeRange> iter = times.listIterator(); iter.hasNext();) {
+      TimeRange timeRange = iter.next();
+      int timeRangeStart = timeRange.start();
+      int timeRangeEnd = timeRange.end();
+      int eventTimeStart = eventTime.start();
+      int eventTimeEnd = eventTime.end();
+      if (timeRange.contains(eventTime)) {
+        /* |---- meeting ----| becomes |-- meeting --||-- event --||-- meeting --|
+        *    |-- event --|
+        */ 
+        iter.remove();
         if (isTimeSlotValid(timeRangeStart, eventTimeStart, duration)) {
           iter.add(TimeRange.fromStartEnd(timeRangeStart, eventTimeStart, false));
         }
-      } else if (timeRangeStart > eventTimeStart && timeRangeEnd > eventTimeEnd) {
         if (isTimeSlotValid(eventTimeEnd, timeRangeEnd, duration)) {
           iter.add(TimeRange.fromStartEnd(eventTimeEnd, timeRangeEnd, false));
+        }
+      } else if (timeRange.overlaps(eventTime)) {
+        /* |-- meeting --|       becomes |-- meeting --||-- event --|
+        *        |-- event --|
+        */
+        iter.remove();
+        if (timeRangeStart < eventTimeStart && timeRangeEnd < eventTimeEnd) { 
+          if (isTimeSlotValid(timeRangeStart, eventTimeStart, duration)) {
+            iter.add(TimeRange.fromStartEnd(timeRangeStart, eventTimeStart, false));
+          }
+        } else if (timeRangeStart > eventTimeStart && timeRangeEnd > eventTimeEnd) {
+          if (isTimeSlotValid(eventTimeEnd, timeRangeEnd, duration)) {
+            iter.add(TimeRange.fromStartEnd(eventTimeEnd, timeRangeEnd, false));
+          }
         }
       }
     }
   }
 
-  private int sumAvailibleTime(ArrayList<TimeRange> times) {
+  private int sumAvailableTime(ArrayList<TimeRange> times) {
     int sum = 0;
     for (TimeRange timeRange : times) {
       sum += timeRange.duration();
